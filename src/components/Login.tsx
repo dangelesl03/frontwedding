@@ -33,7 +33,7 @@ const Login: React.FC = () => {
             Natalia & Daniel
           </p>
           <p className="text-sm text-gray-500 mt-2">
-            28 de Noviembre de 2026
+            28 de Marzo de 2026
           </p>
         </div>
 
