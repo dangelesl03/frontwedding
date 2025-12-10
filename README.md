@@ -1,46 +1,153 @@
-# Getting Started with Create React App
+# 💍 WeddingGift - Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Aplicación web React para gestionar regalos de boda. Permite a los invitados ver regalos, contribuir parcialmente y realizar pagos.
 
-## Available Scripts
+## 🛠️ Tecnologías
 
-In the project directory, you can run:
+- **React 19** - Biblioteca de UI
+- **TypeScript** - Tipado estático
+- **Tailwind CSS** - Framework de estilos
+- **Context API** - Gestión de estado (Autenticación, Carrito, Alertas)
 
-### `npm start`
+## 📋 Requisitos Previos
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- Node.js 16+ y npm
+- Backend API corriendo (ver repositorio del backend)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 🔧 Instalación
 
-### `npm test`
+```bash
+# Instalar dependencias
+npm install
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## ⚙️ Configuración
 
-### `npm run build`
+Crea un archivo `.env.local` en la raíz del frontend:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```env
+REACT_APP_API_URL=http://localhost:5000/api
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Para producción, configura la URL de tu backend desplegado:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```env
+REACT_APP_API_URL=https://tu-backend.vercel.app/api
+```
 
-### `npm run eject`
+## 🚀 Ejecución
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Desarrollo
+```bash
+npm start
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+La aplicación estará disponible en `http://localhost:3000`
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Producción
+```bash
+npm run build
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Los archivos de producción estarán en la carpeta `build/`
 
-## Learn More
+## 📦 Scripts Disponibles
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- `npm start` - Inicia servidor de desarrollo
+- `npm run build` - Construye para producción
+- `npm test` - Ejecuta tests
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## 🌐 Deployment en Vercel
+
+1. Conecta tu repositorio a Vercel
+2. Configura **Root Directory**: `frontend`
+3. Framework Preset: **Create React App**
+4. Build Command: `npm run build`
+5. Output Directory: `build`
+6. Agrega variable de entorno:
+   - `REACT_APP_API_URL`: URL de tu backend desplegado
+7. Deploy
+
+## 📁 Estructura del Proyecto
+
+```
+frontend/
+├── public/              # Archivos estáticos
+│   ├── index.html
+│   └── qr-codes/        # Códigos QR de pago
+├── src/
+│   ├── components/      # Componentes React
+│   │   ├── Alert.tsx
+│   │   ├── Cart.tsx
+│   │   ├── Login.tsx
+│   │   ├── Navigation.tsx
+│   │   └── PaymentModal.tsx
+│   ├── contexts/        # Context API
+│   │   ├── AlertContext.tsx
+│   │   ├── AuthContext.tsx
+│   │   └── CartContext.tsx
+│   ├── pages/           # Páginas principales
+│   │   ├── EventPage.tsx
+│   │   ├── GiftsPage.tsx
+│   │   └── ReportsPage.tsx
+│   ├── services/        # Servicios API
+│   │   └── api.ts       # Cliente API
+│   ├── config.ts        # Configuración
+│   └── App.tsx          # Componente principal
+├── tailwind.config.js   # Configuración de Tailwind
+└── tsconfig.json        # Configuración de TypeScript
+```
+
+## 🎨 Características
+
+- **Página de Evento**: Información del evento, fecha y detalles
+- **Lista de Regalos**: Visualización de regalos con imágenes y precios
+- **Carrito de Compras**: Sistema de carrito para seleccionar múltiples regalos
+- **Contribuciones Parciales**: Los invitados pueden contribuir montos parciales
+- **Modal de Pago**: Información de pago (Yape, Plin, transferencias bancarias)
+- **Panel de Reportes**: Visualización de contribuciones (requiere autenticación admin)
+
+## 🔐 Autenticación
+
+El frontend usa Context API para gestionar la autenticación. Los tokens JWT se almacenan en `localStorage`.
+
+## 💳 Configuración de Pagos
+
+Para configurar tus datos de pago (Yape, Plin, cuenta bancaria), edita:
+
+`src/components/PaymentModal.tsx`
+
+Ver [INSTRUCCIONES_PAGO.md](./INSTRUCCIONES_PAGO.md) para más detalles.
+
+## 🔗 Conexión con Backend
+
+El frontend se conecta al backend mediante la variable de entorno `REACT_APP_API_URL`. Asegúrate de que:
+
+1. El backend esté corriendo y accesible
+2. `REACT_APP_API_URL` apunte a la URL correcta del backend
+3. El backend tenga CORS configurado para permitir requests del frontend
+
+## 📝 Variables de Entorno
+
+Las variables de React deben comenzar con `REACT_APP_` para ser accesibles en el código.
+
+- `REACT_APP_API_URL` - URL del backend API
+
+## 🐛 Solución de Problemas
+
+- **Error de conexión al backend**: Verifica `REACT_APP_API_URL` en `.env.local`
+- **Error de CORS**: Asegúrate de que el backend tenga configurado `FRONTEND_URL`
+- **Problemas de build**: Ver [SOLUCION_ERROR.md](./SOLUCION_ERROR.md)
+
+## 📚 Documentación Adicional
+
+- [INSTRUCCIONES_PAGO.md](./INSTRUCCIONES_PAGO.md) - Configuración de información de pago
+- [SOLUCION_ERROR.md](./SOLUCION_ERROR.md) - Solución de errores comunes
+
+## 📝 Licencia
+
+Este proyecto es privado y está destinado para uso personal.
+
+## 👥 Autores
+
+Natalia & Daniel - Boda 28 de Marzo 2026

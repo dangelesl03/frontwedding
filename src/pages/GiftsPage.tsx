@@ -1,0 +1,379 @@
+import React, { useState, useEffect } from 'react';
+import { apiService } from '../services/api';
+import { useCart } from '../contexts/CartContext';
+import { useAlert } from '../contexts/AlertContext';
+
+interface Gift {
+  _id: string;
+  name: string;
+  description?: string;
+  price: number;
+  currency: string;
+  category: string;
+  available: number;
+  total: number;
+  imageUrl?: string;
+  isActive: boolean;
+  isContributed: boolean;
+  isFullyContributed?: boolean;
+  contributors: Array<{
+    userId: string;
+    amount: number;
+    contributedAt: string;
+  }>;
+}
+
+const GiftsPage: React.FC = () => {
+  const { addToCart } = useCart();
+  const { showAlert } = useAlert();
+  const [gifts, setGifts] = useState<Gift[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('Todas las categorías');
+  const [minPrice, setMinPrice] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
+  const [sortBy, setSortBy] = useState('name');
+  const [contributingTo, setContributingTo] = useState<string | null>(null);
+  const [contributionAmount, setContributionAmount] = useState('');
+
+  const categories = ['Todas las categorías', 'Luna de Miel', 'Arte y Deco', 'Otro'];
+
+  useEffect(() => {
+    loadGifts();
+  }, [selectedCategory, minPrice, maxPrice, sortBy]);
+
+  const loadGifts = async () => {
+    try {
+      const params: any = {
+        category: selectedCategory !== 'Todas las categorías' ? selectedCategory : undefined,
+        minPrice: minPrice ? parseFloat(minPrice) : undefined,
+        maxPrice: maxPrice ? parseFloat(maxPrice) : undefined,
+        sortBy,
+      };
+
+      const giftsData = await apiService.getGifts(params);
+      // Normalizar datos: asegurar que imageUrl y price estén correctos
+      const giftsWithImageUrl = giftsData.map((gift: any) => {
+        const price = typeof gift.price === 'string' ? parseFloat(gift.price) : gift.price;
+        // El backend ahora incluye total_contributed en la respuesta
+        const totalContributed = parseFloat(gift.total_contributed || 0);
+        const isFullyContributed = totalContributed >= price;
+        
+        return {
+          ...gift,
+          imageUrl: gift.imageUrl || gift.image_url || null,
+          price: price,
+          // Solo marcar como contribuido si realmente alcanzó el precio completo
+          isContributed: isFullyContributed,
+          isFullyContributed: isFullyContributed
+        };
+      });
+      setGifts(giftsWithImageUrl);
+    } catch (error) {
+      setError('Error al cargar los regalos');
+      console.error('Error loading gifts:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleContribute = async (giftId: string) => {
+    if (!contributionAmount || parseFloat(contributionAmount) <= 0) {
+      showAlert('warning', 'Por favor ingresa un monto válido');
+      return;
+    }
+
+    try {
+      const amount = parseFloat(contributionAmount);
+      await apiService.contributeToGift(giftId, amount);
+      
+      // También agregar al carrito con el monto de contribución
+      const gift = gifts.find(g => g._id === giftId);
+      if (gift) {
+        addToCart({
+          _id: gift._id,
+          name: gift.name,
+          price: amount, // Usar el monto de contribución como precio
+          quantity: 1,
+          imageUrl: gift.imageUrl
+        });
+      }
+      
+      setContributingTo(null);
+      setContributionAmount('');
+      loadGifts(); // Recargar la lista
+      showAlert('success', 'Contribución agregada al carrito. Procede al pago cuando estés listo.');
+    } catch (error: any) {
+      const errorMessage = error?.response?.data?.message || 'Error al realizar la contribución';
+      showAlert('error', errorMessage);
+      console.error('Error contributing:', error);
+    }
+  };
+
+  const getTotalContributed = (gift: Gift) => {
+    // Si el backend incluye total_contributed, usarlo (más preciso)
+    if ((gift as any).total_contributed !== undefined) {
+      const total = (gift as any).total_contributed;
+      return typeof total === 'string' ? parseFloat(total) : (total || 0);
+    }
+    // Si hay contributors en el objeto, calcular desde ellos
+    if (gift.contributors && gift.contributors.length > 0) {
+      return gift.contributors.reduce((total, contributor) => {
+        const amount = contributor.amount;
+        const amountNum = typeof amount === 'string' ? parseFloat(amount) : (amount || 0);
+        return total + amountNum;
+      }, 0);
+    }
+    return 0;
+  };
+
+  const getProgressPercentage = (gift: Gift) => {
+    const totalContributed = getTotalContributed(gift);
+    const price = typeof gift.price === 'string' ? parseFloat(gift.price) : gift.price;
+    if (price === 0) return 0;
+    return Math.min((totalContributed / price) * 100, 100);
+  };
+
+  const isGiftFullyContributed = (gift: Gift) => {
+    const totalContributed = getTotalContributed(gift);
+    const price = typeof gift.price === 'string' ? parseFloat(gift.price) : gift.price;
+    return totalContributed >= price;
+  };
+
+  const getPrice = (gift: Gift) => {
+    return typeof gift.price === 'string' ? parseFloat(gift.price) : gift.price;
+  };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500"></div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-6xl mx-auto px-4 py-8">
+      {/* Header */}
+      <div className="text-center mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          Esta es nuestra lista de regalos
+        </h1>
+        <p className="text-gray-600">
+          Elige tu regalo y sigue con la compra
+        </p>
+      </div>
+
+      {/* Filtros */}
+      <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
+        <div className="grid md:grid-cols-4 gap-4">
+          {/* Categorías */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Categorías
+            </label>
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+            >
+              {categories.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Rango de precios */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Precio Mínimo
+            </label>
+            <input
+              type="number"
+              value={minPrice}
+              onChange={(e) => setMinPrice(e.target.value)}
+              placeholder="Min"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Precio Máximo
+            </label>
+            <input
+              type="number"
+              value={maxPrice}
+              onChange={(e) => setMaxPrice(e.target.value)}
+              placeholder="Max"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+            />
+          </div>
+
+          {/* Ordenar por */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Ordenar por
+            </label>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+            >
+              <option value="name">Nombre</option>
+              <option value="price_asc">Precio: Menor a Mayor</option>
+              <option value="price_desc">Precio: Mayor a Menor</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      {/* Lista de regalos */}
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {gifts.map((gift) => (
+          <div key={gift._id} className="bg-white rounded-lg shadow-sm overflow-hidden">
+            {/* Imagen del regalo */}
+            <div className="h-48 bg-gray-200 flex items-center justify-center overflow-hidden">
+              {(gift.imageUrl || (gift as any).image_url) ? (
+                <img
+                  src={gift.imageUrl || (gift as any).image_url}
+                  alt={gift.name}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    // Si la imagen falla al cargar, ocultar y mostrar placeholder
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                  }}
+                />
+              ) : null}
+              {!(gift.imageUrl || (gift as any).image_url) && (
+                <div className="text-gray-400">
+                  <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                  </svg>
+                </div>
+              )}
+            </div>
+
+            {/* Contenido */}
+            <div className="p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                {gift.name}
+              </h3>
+
+              {gift.description && (
+                <p className="text-gray-600 text-sm mb-4">
+                  {gift.description}
+                </p>
+              )}
+
+              {/* Barra de progreso */}
+              <div className="mb-4">
+                <div className="flex justify-between text-sm text-gray-600 mb-1">
+                  <span>Progreso</span>
+                  <span>{Math.round(getProgressPercentage(gift))}%</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    className="bg-pink-500 h-2 rounded-full"
+                    style={{ width: `${getProgressPercentage(gift)}%` }}
+                  ></div>
+                </div>
+                <div className="flex justify-between text-xs text-gray-500 mt-1">
+                  <span>S/ {getTotalContributed(gift).toFixed(2)}</span>
+                  <span>S/ {getPrice(gift).toFixed(2)}</span>
+                </div>
+              </div>
+
+              {/* Estado */}
+              <div className="mb-4">
+                {isGiftFullyContributed(gift) ? (
+                  <span className="inline-block bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full font-semibold">
+                    VENDIDO
+                  </span>
+                ) : (
+                  <span className="inline-block bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">
+                    Disponible
+                  </span>
+                )}
+              </div>
+
+              {/* Acciones */}
+              {contributingTo === gift._id ? (
+                <div className="space-y-3">
+                  <input
+                    type="number"
+                    value={contributionAmount}
+                    onChange={(e) => setContributionAmount(e.target.value)}
+                    placeholder="Monto a contribuir"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+                  />
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={() => handleContribute(gift._id)}
+                      className="flex-1 bg-pink-600 text-white py-2 px-4 rounded-md hover:bg-pink-700 text-sm font-medium"
+                    >
+                      Contribuir
+                    </button>
+                    <button
+                      onClick={() => {
+                        setContributingTo(null);
+                        setContributionAmount('');
+                      }}
+                      className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 text-sm font-medium"
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <button
+                    onClick={() => addToCart({
+                      _id: gift._id,
+                      name: gift.name,
+                      price: getPrice(gift),
+                      quantity: 1,
+                      imageUrl: gift.imageUrl
+                    })}
+                    disabled={isGiftFullyContributed(gift)}
+                    className="w-full bg-pink-600 text-white py-2 px-4 rounded-md hover:bg-pink-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium flex items-center justify-center"
+                  >
+                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    Agregar al Carrito
+                  </button>
+                  {!isGiftFullyContributed(gift) && (
+                    <button
+                      onClick={() => setContributingTo(gift._id)}
+                      className="w-full bg-gray-200 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-300 text-sm font-medium"
+                    >
+                      Contribuir Parcialmente
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {gifts.length === 0 && !loading && (
+        <div className="text-center py-12">
+          <p className="text-gray-500">No se encontraron regalos con los filtros seleccionados</p>
+        </div>
+      )}
+
+      {error && (
+        <div className="text-center py-12">
+          <p className="text-red-500">{error}</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default GiftsPage;
