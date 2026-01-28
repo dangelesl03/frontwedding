@@ -24,7 +24,7 @@ interface Gift {
 }
 
 const GiftsPage: React.FC = () => {
-  const { addToCart } = useCart();
+  const { addToCart, items: cartItems } = useCart();
   const { showAlert } = useAlert();
   const [gifts, setGifts] = useState<Gift[]>([]);
   const [loading, setLoading] = useState(true);
@@ -85,28 +85,55 @@ const GiftsPage: React.FC = () => {
 
     try {
       const amount = parseFloat(contributionAmount);
-      await apiService.contributeToGift(giftId, amount);
-      
-      // También agregar al carrito con el monto de contribución
       const gift = gifts.find(g => g._id === giftId);
-      if (gift) {
-        addToCart({
-          _id: gift._id,
-          name: gift.name,
-          price: amount, // Usar el monto de contribución como precio
-          quantity: 1,
-          imageUrl: gift.imageUrl
-        });
+      
+      if (!gift) {
+        showAlert('error', 'Regalo no encontrado');
+        return;
+      }
+
+      // Validar que el monto no exceda el disponible
+      const availableAmount = getAvailableAmount(gift);
+      if (amount > availableAmount) {
+        showAlert('warning', `El monto máximo disponible es S/ ${availableAmount.toFixed(2)}`);
+        return;
+      }
+
+      // Validar que el monto no exceda el precio del producto
+      const price = getPrice(gift);
+      if (amount > price) {
+        showAlert('warning', `El monto no puede exceder el precio del producto (S/ ${price.toFixed(2)})`);
+        return;
       }
       
-      setContributingTo(null);
-      setContributionAmount('');
-      loadGifts(); // Recargar la lista
-      showAlert('success', 'Contribución agregada al carrito. Procede al pago cuando estés listo.');
+      // Validar que no esté ya en el carrito
+      const alreadyInCart = cartItems.some(item => item._id === giftId);
+      if (alreadyInCart) {
+        showAlert('warning', 'Este producto ya está en el carrito. Elimínalo primero si deseas cambiar el monto.');
+        return;
+      }
+
+      // Solo agregar al carrito, NO registrar la contribución todavía
+      // La contribución se registrará cuando se confirme el pago
+      const added = addToCart({
+        _id: gift._id,
+        name: gift.name,
+        price: amount, // Usar el monto de contribución como precio
+        quantity: 1,
+        imageUrl: gift.imageUrl
+      }, availableAmount);
+
+      if (added) {
+        setContributingTo(null);
+        setContributionAmount('');
+        showAlert('success', 'Contribución agregada al carrito. Procede al pago cuando estés listo.');
+      } else {
+        showAlert('warning', 'No se puede agregar: excedería el monto disponible');
+      }
     } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || 'Error al realizar la contribución';
+      const errorMessage = error?.response?.data?.message || 'Error al agregar al carrito';
       showAlert('error', errorMessage);
-      console.error('Error contributing:', error);
+      console.error('Error adding to cart:', error);
     }
   };
 
@@ -142,6 +169,12 @@ const GiftsPage: React.FC = () => {
 
   const getPrice = (gift: Gift) => {
     return typeof gift.price === 'string' ? parseFloat(gift.price) : gift.price;
+  };
+
+  const getAvailableAmount = (gift: Gift) => {
+    const price = getPrice(gift);
+    const totalContributed = getTotalContributed(gift);
+    return Math.max(0, price - totalContributed);
   };
 
   if (loading) {
@@ -303,13 +336,21 @@ const GiftsPage: React.FC = () => {
               {/* Acciones */}
               {contributingTo === gift._id ? (
                 <div className="space-y-3">
-                  <input
-                    type="number"
-                    value={contributionAmount}
-                    onChange={(e) => setContributionAmount(e.target.value)}
-                    placeholder="Monto a contribuir"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
-                  />
+                  <div>
+                    <input
+                      type="number"
+                      value={contributionAmount}
+                      onChange={(e) => setContributionAmount(e.target.value)}
+                      placeholder={`Monto a contribuir (máx. S/ ${getAvailableAmount(gift).toFixed(2)})`}
+                      max={getAvailableAmount(gift)}
+                      min="0"
+                      step="0.01"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Disponible: S/ {getAvailableAmount(gift).toFixed(2)} de S/ {getPrice(gift).toFixed(2)}
+                    </p>
+                  </div>
                   <div className="flex space-x-2">
                     <button
                       onClick={() => handleContribute(gift._id)}
@@ -331,13 +372,35 @@ const GiftsPage: React.FC = () => {
               ) : (
                 <div className="space-y-2">
                   <button
-                    onClick={() => addToCart({
-                      _id: gift._id,
-                      name: gift.name,
-                      price: getPrice(gift),
-                      quantity: 1,
-                      imageUrl: gift.imageUrl
-                    })}
+                    onClick={() => {
+                      const availableAmount = getAvailableAmount(gift);
+                      if (availableAmount <= 0) {
+                        showAlert('warning', 'Este regalo ya está completamente contribuido');
+                        return;
+                      }
+
+                      // Validar que no esté ya en el carrito
+                      const alreadyInCart = cartItems.some(item => item._id === gift._id);
+                      if (alreadyInCart) {
+                        showAlert('warning', 'Este producto ya está en el carrito');
+                        return;
+                      }
+
+                      // Intentar agregar con validación del monto máximo
+                      const added = addToCart({
+                        _id: gift._id,
+                        name: gift.name,
+                        price: availableAmount, // Usar el monto disponible en lugar del precio completo
+                        quantity: 1,
+                        imageUrl: gift.imageUrl
+                      }, availableAmount);
+
+                      if (added) {
+                        showAlert('success', `Agregado al carrito por S/ ${availableAmount.toFixed(2)} (monto disponible)`);
+                      } else {
+                        showAlert('warning', 'No se puede agregar: excedería el monto disponible');
+                      }
+                    }}
                     disabled={isGiftFullyContributed(gift)}
                     className="w-full bg-pink-600 text-white py-2 px-4 rounded-md hover:bg-pink-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium flex items-center justify-center"
                   >

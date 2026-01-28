@@ -30,17 +30,31 @@ class ApiService {
       headers.Authorization = `Bearer ${this.getToken()}`;
     }
 
-    const response = await fetch(url, {
-      ...options,
-      headers,
-    });
+    try {
+      console.log(`[API] Making request to: ${url}`);
+      const response = await fetch(url, {
+        ...options,
+        headers,
+      });
 
-    if (!response.ok) {
-      const error = await response.json().catch(() => ({ message: 'Error desconocido' }));
-      throw new Error(error.message || `HTTP error! status: ${response.status}`);
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({ message: 'Error desconocido' }));
+        throw new Error(error.message || `HTTP error! status: ${response.status}`);
+      }
+
+      return response.json();
+    } catch (error: any) {
+      // Manejar errores de red (Failed to fetch)
+      if (error.message === 'Failed to fetch' || error.name === 'TypeError' || error.message?.includes('fetch')) {
+        const backendUrl = API_BASE_URL.replace('/api', '');
+        console.error(`[API] Connection error to ${backendUrl}${endpoint}:`, error);
+        throw new Error(
+          `No se pudo conectar con el servidor en ${backendUrl}. Verifica que el backend esté corriendo y que CORS esté configurado correctamente.`
+        );
+      }
+      console.error(`[API] Error:`, error);
+      throw error;
     }
-
-    return response.json();
   }
 
   // Auth endpoints
@@ -127,10 +141,10 @@ class ApiService {
   }
 
       // Payment endpoints
-      async confirmPayment(giftIds: string[], paymentMethod?: string, paymentReference?: string) {
+      async confirmPayment(giftIds: string[], paymentMethod?: string, paymentReference?: string, amounts?: number[]) {
         return this.request('/payments/confirm', {
           method: 'POST',
-          body: JSON.stringify({ giftIds, paymentMethod, paymentReference }),
+          body: JSON.stringify({ giftIds, paymentMethod, paymentReference, amounts }),
         });
       }
 

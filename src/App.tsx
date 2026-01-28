@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { CartProvider } from './contexts/CartContext';
 import { AlertProvider } from './contexts/AlertContext';
@@ -10,8 +10,17 @@ import ReportsPage from './pages/ReportsPage';
 import Cart from './components/Cart';
 
 const AppContent: React.FC = () => {
-  const [activeTab, setActiveTab] = useState('evento');
+  // Restaurar la pestaña activa desde localStorage si existe, sino usar 'evento' por defecto
+  const [activeTab, setActiveTab] = useState(() => {
+    const savedTab = localStorage.getItem('activeTab');
+    return savedTab || 'evento';
+  });
   const { isAuthenticated, loading } = useAuth();
+  
+  // Actualizar localStorage cuando cambia la pestaña activa
+  useEffect(() => {
+    localStorage.setItem('activeTab', activeTab);
+  }, [activeTab]);
 
   if (loading) {
     return (
@@ -28,7 +37,7 @@ const AppContent: React.FC = () => {
   return (
     <AlertProvider>
       <CartProvider>
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-white">
           <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
 
             <main className="py-8">

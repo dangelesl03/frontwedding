@@ -10,12 +10,13 @@ interface CartItem {
 
 interface CartContextType {
   items: CartItem[];
-  addToCart: (gift: CartItem) => void;
+  addToCart: (gift: CartItem, maxAmount?: number) => boolean;
   removeFromCart: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
+  getItemTotalAmount: (id: string) => number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -42,18 +43,45 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     localStorage.setItem('cart', JSON.stringify(items));
   }, [items]);
 
-  const addToCart = (gift: CartItem) => {
+  const getItemTotalAmount = (id: string) => {
+    const item = items.find(i => i._id === id);
+    if (!item) return 0;
+    const price = typeof item.price === 'string' ? parseFloat(item.price) : item.price;
+    const quantity = item.quantity || 1;
+    return price * quantity;
+  };
+
+  const addToCart = (gift: CartItem, maxAmount?: number): boolean => {
+    const giftPrice = typeof gift.price === 'string' ? parseFloat(gift.price) : gift.price;
+    const quantity = gift.quantity || 1;
+    const newAmount = giftPrice * quantity;
+
+    // Si hay un monto máximo especificado, validar
+    if (maxAmount !== undefined) {
+      const existingItem = items.find(item => item._id === gift._id);
+      const existingAmount = existingItem 
+        ? (typeof existingItem.price === 'string' ? parseFloat(existingItem.price) : existingItem.price) * (existingItem.quantity || 1)
+        : 0;
+      
+      const totalAmount = existingAmount + newAmount;
+      
+      if (totalAmount > maxAmount) {
+        return false; // No agregar si excede el máximo
+      }
+    }
+
     setItems(prevItems => {
       const existingItem = prevItems.find(item => item._id === gift._id);
+      
+      // Si el producto ya está en el carrito, no agregar otro (ya que cada producto solo puede tener una contribución)
       if (existingItem) {
-        return prevItems.map(item =>
-          item._id === gift._id
-            ? { ...item, quantity: (item.quantity || 1) + 1 }
-            : item
-        );
+        return prevItems; // No hacer nada, ya está en el carrito
       }
+      
       return [...prevItems, { ...gift, quantity: gift.quantity || 1 }];
     });
+    
+    return true; // Agregado exitosamente
   };
 
   const removeFromCart = (id: string) => {
@@ -91,6 +119,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     clearCart,
     totalItems,
     totalPrice,
+    getItemTotalAmount,
   };
 
   return (

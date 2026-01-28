@@ -49,14 +49,20 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, onConfirm 
   const handleConfirm = async () => {
     setIsProcessing(true);
     try {
-      // Obtener IDs de los regalos del carrito
+      // Obtener IDs de los regalos del carrito y los montos pagados
       const giftIds = items.map(item => item._id);
+      const amounts = items.map(item => {
+        const price = typeof item.price === 'string' ? parseFloat(item.price) : item.price;
+        const quantity = item.quantity || 1;
+        return price * quantity;
+      });
       
-      // Confirmar pago en el backend
+      // Confirmar pago en el backend con los montos específicos
       await apiService.confirmPayment(
         giftIds,
         'Transferencia', // Puedes cambiar esto según el método seleccionado
-        `Pago confirmado - ${new Date().toISOString()}`
+        `Pago confirmado - ${new Date().toISOString()}`,
+        amounts // Enviar los montos pagados
       );
       
       // Limpiar carrito después de confirmar
@@ -64,7 +70,11 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, onConfirm 
       onConfirm();
       onClose();
       
-      showAlert('success', '¡Pago confirmado! Los regalos han sido marcados como VENDIDOS. Gracias por tu contribución.', 4000);
+      showAlert('success', '¡Pago confirmado! Tu contribución ha sido registrada. Gracias por tu aporte.', 4000);
+      
+      // Guardar la pestaña activa en localStorage antes de recargar
+      // para mantener la pestaña de regalos después del reload
+      localStorage.setItem('activeTab', 'regalos');
       
       // Recargar la página para actualizar el estado de los regalos después de un breve delay
       setTimeout(() => {

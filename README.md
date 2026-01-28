@@ -74,12 +74,16 @@ Los archivos de producción estarán en la carpeta `build/`
 frontend/
 ├── public/              # Archivos estáticos
 │   ├── index.html
+│   ├── images/          # Imágenes del evento
 │   └── qr-codes/        # Códigos QR de pago
 ├── src/
 │   ├── components/      # Componentes React
 │   │   ├── Alert.tsx
 │   │   ├── Cart.tsx
+│   │   ├── DressCodeSlider.tsx
+│   │   ├── ImageCarousel.tsx
 │   │   ├── Login.tsx
+│   │   ├── MapWithMarker.tsx
 │   │   ├── Navigation.tsx
 │   │   └── PaymentModal.tsx
 │   ├── contexts/        # Context API
@@ -117,8 +121,6 @@ Para configurar tus datos de pago (Yape, Plin, cuenta bancaria), edita:
 
 `src/components/PaymentModal.tsx`
 
-Ver [INSTRUCCIONES_PAGO.md](./INSTRUCCIONES_PAGO.md) para más detalles.
-
 ## 🔗 Conexión con Backend
 
 El frontend se conecta al backend mediante la variable de entorno `REACT_APP_API_URL`. Asegúrate de que:
@@ -137,12 +139,7 @@ Las variables de React deben comenzar con `REACT_APP_` para ser accesibles en el
 
 - **Error de conexión al backend**: Verifica `REACT_APP_API_URL` en `.env.local`
 - **Error de CORS**: Asegúrate de que el backend tenga configurado `FRONTEND_URL`
-- **Problemas de build**: Ver [SOLUCION_ERROR.md](./SOLUCION_ERROR.md)
-
-## 📚 Documentación Adicional
-
-- [INSTRUCCIONES_PAGO.md](./INSTRUCCIONES_PAGO.md) - Configuración de información de pago
-- [SOLUCION_ERROR.md](./SOLUCION_ERROR.md) - Solución de errores comunes
+- **Problemas de build**: Verifica que todas las dependencias estén instaladas correctamente
 
 ## 📝 Licencia
 
