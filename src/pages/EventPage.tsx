@@ -261,58 +261,44 @@ const EventPage: React.FC = () => {
 
         {expandedSections.ubicaciones && (
           <div className="px-6 pb-6 pt-4">
-            {/* Texto descriptivo */}
-            <div className="mb-6">
-              <p className="text-gray-700 mb-3 text-sm leading-relaxed">
-                Hemos elegido la Parroquia Virgen de Fátima para nuestra ceremonia religiosa por su significado especial y su ubicación. 
-                Les pedimos puntualidad para que podamos comenzar a tiempo.
-              </p>
-              <p className="text-gray-700 mb-3 text-sm leading-relaxed">
-                Les pedimos acompañarnos a Casona Clark, lugar donde se realizará la ceremonia civil auspiciada por la Municipalidad de Miraflores; para ser legalmente esposos.
-              </p>
-              <p className="text-gray-700 mb-3 text-sm leading-relaxed">
-                Luego, pasaremos a celebrar con música y mucho baile <strong className="text-gray-900">(PROHIBIDO QUEDARSE SENTADO)</strong>
-              </p>
-              <p className="text-gray-700 text-sm leading-relaxed">
-                Esperamos que disfruten de todo lo que hemos preparado con mucho cariño y dedicación, para que vivan junto a nosotros una noche inolvidable.
-              </p>
-            </div>
-
             {/* Mapas con información lado a lado */}
             <div className="grid md:grid-cols-2 gap-4">
-              {/* Ceremonia - Izquierda */}
-              <div className="bg-white border border-gray-200 rounded-lg p-4 flex flex-col">
-                {/* Información de fecha y hora - Estética mejorada */}
-                <div className="mb-3 pb-3 border-b border-gray-200">
-                  <h3 className="text-base font-semibold text-gray-900 mb-2" style={{ fontFamily: 'serif' }}>Ceremonia Religiosa</h3>
-                  <div className="space-y-2">
-                    <div className="flex items-start">
-                      <div className="bg-pink-50 rounded-full p-1.5 mr-2 flex-shrink-0">
-                        <svg className="w-4 h-4 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4m-9 4h10m-9 4h10m-5-8v12" />
-                        </svg>
-                      </div>
-                      <div>
-                        <p className="text-xs text-gray-500 uppercase tracking-wide">Fecha</p>
-                        <p className="text-sm font-medium text-gray-900">{CEREMONY_LOCATION.date}</p>
-                      </div>
+              {/* Ceremonia Religiosa - Izquierda */}
+              <div className="bg-gradient-to-br from-pink-50 to-white border border-gray-200 rounded-lg p-4 flex flex-col shadow-sm">
+                {/* Header con icono grande - Estilo similar al banner */}
+                <div className="mb-4 flex items-start space-x-3">
+                  <div className="bg-white rounded-full p-3 flex-shrink-0 shadow-md">
+                    <svg className="w-6 h-6 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-1" style={{ fontFamily: 'serif' }}>Ceremonia Religiosa</h3>
+                    <p className="text-xs text-gray-600 mb-2">Parroquia Virgen de Fátima</p>
+                    <span className="inline-block bg-red-100 text-red-700 text-xs px-2 py-1 rounded font-medium">Puntualidad requerida</span>
+                  </div>
+                </div>
+
+                {/* Fecha y hora compactas */}
+                <div className="mb-4 pb-4 border-b border-gray-200">
+                  <div className="flex items-center space-x-4 text-sm">
+                    <div className="flex items-center">
+                      <svg className="w-4 h-4 text-pink-600 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4m-9 4h10m-9 4h10m-5-8v12" />
+                      </svg>
+                      <span className="text-gray-700 font-medium">{CEREMONY_LOCATION.date}</span>
                     </div>
-                    <div className="flex items-start">
-                      <div className="bg-pink-50 rounded-full p-1.5 mr-2 flex-shrink-0">
-                        <svg className="w-4 h-4 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                      </div>
-                      <div>
-                        <p className="text-xs text-gray-500 uppercase tracking-wide">Hora</p>
-                        <p className="text-sm font-medium text-gray-900">{CEREMONY_LOCATION.time}</p>
-                      </div>
+                    <div className="flex items-center">
+                      <svg className="w-4 h-4 text-pink-600 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span className="text-gray-700 font-medium">{CEREMONY_LOCATION.time}</span>
                     </div>
                   </div>
                 </div>
                 
                 {/* Mapa */}
-                <div className="flex-1">
+                <div className="flex-1 min-h-0">
                   <MapWithMarker
                     address={CEREMONY_LOCATION.address}
                     mapEmbedUrl={CEREMONY_LOCATION.mapEmbedUrl}
@@ -325,38 +311,53 @@ const EventPage: React.FC = () => {
               </div>
 
               {/* Ceremonia Civil y Recepción - Derecha */}
-              <div className="bg-white border border-gray-200 rounded-lg p-4 flex flex-col">
-                {/* Información de fecha y hora - Estética mejorada */}
-                <div className="mb-3 pb-3 border-b border-gray-200">
-                  <h3 className="text-base font-semibold text-gray-900 mb-2" style={{ fontFamily: 'serif' }}>Ceremonia Civil y Recepción</h3>
-                  <div className="space-y-2">
-                    <div className="flex items-start">
-                      <div className="bg-pink-50 rounded-full p-1.5 mr-2 flex-shrink-0">
-                        <svg className="w-4 h-4 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4m-9 4h10m-9 4h10m-5-8v12" />
-                        </svg>
-                      </div>
-                      <div>
-                        <p className="text-xs text-gray-500 uppercase tracking-wide">Fecha</p>
-                        <p className="text-sm font-medium text-gray-900">{RECEPTION_LOCATION.date}</p>
-                      </div>
+              <div className="bg-gradient-to-br from-purple-50 to-white border border-gray-200 rounded-lg p-4 flex flex-col shadow-sm">
+                {/* Header con iconos en la misma línea */}
+                <div className="mb-4 flex items-start space-x-3">
+                  {/* Icono combinado */}
+                  <div className="bg-white rounded-full p-3 flex-shrink-0 shadow-md">
+                    <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-1" style={{ fontFamily: 'serif' }}>Ceremonia Civil y Recepción</h3>
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
+                      <p className="text-xs text-gray-600">Casona Clark - Municipalidad de Miraflores</p>
+                      <span className="text-gray-400">•</span>
+                      <p className="text-xs text-gray-600">Música y baile</p>
                     </div>
-                    <div className="flex items-start">
-                      <div className="bg-pink-50 rounded-full p-1.5 mr-2 flex-shrink-0">
-                        <svg className="w-4 h-4 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                      </div>
-                      <div>
-                        <p className="text-xs text-gray-500 uppercase tracking-wide">Hora</p>
-                        <p className="text-sm font-medium text-gray-900">{RECEPTION_LOCATION.time}</p>
-                      </div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="inline-flex items-center gap-1.5 bg-red-100 text-red-700 text-xs px-2 py-1 rounded font-medium">
+                        <span>💃</span>
+                        <span>¡A bailar se ha dicho!</span>
+                        <span>🕺</span>
+                        <span className="ml-1">🍾🥂🍷</span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Fecha y hora compactas */}
+                <div className="mb-4 pb-4 border-b border-gray-200">
+                  <div className="flex items-center space-x-4 text-sm">
+                    <div className="flex items-center">
+                      <svg className="w-4 h-4 text-purple-600 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4m-9 4h10m-9 4h10m-5-8v12" />
+                      </svg>
+                      <span className="text-gray-700 font-medium">{RECEPTION_LOCATION.date}</span>
+                    </div>
+                    <div className="flex items-center">
+                      <svg className="w-4 h-4 text-purple-600 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span className="text-gray-700 font-medium">{RECEPTION_LOCATION.time}</span>
                     </div>
                   </div>
                 </div>
                 
                 {/* Mapa */}
-                <div className="flex-1">
+                <div className="flex-1 min-h-0">
                   <MapWithMarker
                     address={RECEPTION_LOCATION.address}
                     mapEmbedUrl={RECEPTION_LOCATION.mapEmbedUrl}
