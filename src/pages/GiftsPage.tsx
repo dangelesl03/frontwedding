@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { apiService } from '../services/api';
 import { useCart } from '../contexts/CartContext';
 import { useAlert } from '../contexts/AlertContext';
@@ -38,11 +38,7 @@ const GiftsPage: React.FC = () => {
 
   const categories = ['Todas las categorías', 'Luna de Miel', 'Arte y Deco', 'Otro'];
 
-  useEffect(() => {
-    loadGifts();
-  }, [selectedCategory, minPrice, maxPrice, sortBy]);
-
-  const loadGifts = async () => {
+  const loadGifts = useCallback(async () => {
     try {
       const params: any = {
         category: selectedCategory !== 'Todas las categorías' ? selectedCategory : undefined,
@@ -75,7 +71,11 @@ const GiftsPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedCategory, minPrice, maxPrice, sortBy]);
+
+  useEffect(() => {
+    loadGifts();
+  }, [loadGifts]);
 
   const handleContribute = async (giftId: string) => {
     if (!contributionAmount || parseFloat(contributionAmount) <= 0) {

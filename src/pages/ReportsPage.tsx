@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { apiService } from '../services/api';
 import { useAlert } from '../contexts/AlertContext';
 
@@ -25,11 +25,7 @@ const ReportsPage: React.FC = () => {
   const [error, setError] = useState('');
   const [expandedGift, setExpandedGift] = useState<string | null>(null);
 
-  useEffect(() => {
-    loadReports();
-  }, []);
-
-  const loadReports = async () => {
+  const loadReports = useCallback(async () => {
     try {
       setLoading(true);
       const data = await apiService.getContributionsReport();
@@ -42,7 +38,11 @@ const ReportsPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [showAlert]);
+
+  useEffect(() => {
+    loadReports();
+  }, [loadReports]);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);

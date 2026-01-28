@@ -33,6 +33,7 @@ const MapWithMarker: React.FC<MapWithMarkerProps> = ({
           allowFullScreen
           referrerPolicy="no-referrer-when-downgrade"
           src={mapEmbedUrl}
+          title={`Mapa de ${locationName}`}
         ></iframe>
       </div>
 
