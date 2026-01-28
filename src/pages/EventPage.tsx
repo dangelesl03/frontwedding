@@ -284,7 +284,7 @@ const EventPage: React.FC = () => {
               <div className="bg-white border border-gray-200 rounded-lg p-4 flex flex-col">
                 {/* Información de fecha y hora - Estética mejorada */}
                 <div className="mb-3 pb-3 border-b border-gray-200">
-                  <h3 className="text-base font-semibold text-gray-900 mb-2" style={{ fontFamily: 'serif' }}>Ceremonia</h3>
+                  <h3 className="text-base font-semibold text-gray-900 mb-2" style={{ fontFamily: 'serif' }}>Ceremonia Religiosa</h3>
                   <div className="space-y-2">
                     <div className="flex items-start">
                       <div className="bg-pink-50 rounded-full p-1.5 mr-2 flex-shrink-0">
