@@ -1,5 +1,5 @@
 {
-  "buildCommand": "NODE_OPTIONS=--no-deprecation npm run build",
+  "buildCommand": "npm run build",
   "outputDirectory": "build",
   "devCommand": "npm start",
   "installCommand": "npm install",
@@ -11,6 +11,7 @@
     }
   ],
   "env": {
-    "REACT_APP_API_URL": "https://backwedding.vercel.app/api"
+    "REACT_APP_API_URL": "https://backwedding.vercel.app/api",
+    "NODE_OPTIONS": "--no-deprecation"
   }
 }
