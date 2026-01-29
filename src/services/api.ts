@@ -31,7 +31,6 @@ class ApiService {
     }
 
     try {
-      console.log(`[API] Making request to: ${url}`);
       const response = await fetch(url, {
         ...options,
         headers,
@@ -44,15 +43,12 @@ class ApiService {
 
       return response.json();
     } catch (error: any) {
-      // Manejar errores de red (Failed to fetch)
       if (error.message === 'Failed to fetch' || error.name === 'TypeError' || error.message?.includes('fetch')) {
         const backendUrl = API_BASE_URL.replace('/api', '');
-        console.error(`[API] Connection error to ${backendUrl}${endpoint}:`, error);
         throw new Error(
           `No se pudo conectar con el servidor en ${backendUrl}. Verifica que el backend esté corriendo y que CORS esté configurado correctamente.`
         );
       }
-      console.error(`[API] Error:`, error);
       throw error;
     }
   }
@@ -148,6 +144,36 @@ class ApiService {
         });
       }
 
+      // Category endpoints
+      async getCategories(includeInactive?: boolean) {
+        const params = includeInactive ? '?includeInactive=true' : '';
+        return this.request(`/categories${params}`);
+      }
+
+      async getCategory(id: string) {
+        return this.request(`/categories/${id}`);
+      }
+
+      async createCategory(categoryData: { name: string; description?: string; isActive?: boolean }) {
+        return this.request('/categories', {
+          method: 'POST',
+          body: JSON.stringify(categoryData),
+        });
+      }
+
+      async updateCategory(id: string, categoryData: { name?: string; description?: string; isActive?: boolean }) {
+        return this.request(`/categories/${id}`, {
+          method: 'PUT',
+          body: JSON.stringify(categoryData),
+        });
+      }
+
+      async deleteCategory(id: string) {
+        return this.request(`/categories/${id}`, {
+          method: 'DELETE',
+        });
+      }
+
       // Report endpoints
       async getContributionsReport() {
         return this.request('/reports/contributions');
@@ -155,6 +181,51 @@ class ApiService {
 
       async getSummaryReport() {
         return this.request('/reports/summary');
+      }
+
+      // Admin endpoints
+      async createGiftCards(config: {
+        amounts: number[];
+        quantities: { [key: number]: number };
+        themes: Array<{ name: string; emoji: string; imageUrl: string }>;
+      }) {
+        return this.request('/gifts/gift-cards', {
+          method: 'POST',
+          body: JSON.stringify(config),
+        });
+      }
+
+      // Import endpoints
+      async importGiftsFromUrl(url: string, category?: string, categoryId?: number) {
+        return this.request('/import/gifts', {
+          method: 'POST',
+          body: JSON.stringify({ url, category, categoryId }),
+        });
+      }
+
+      async importGiftsFromCSV(csvContent: string, category?: string, categoryId?: number, baseImageUrl?: string) {
+        return this.request('/import/csv', {
+          method: 'POST',
+          body: JSON.stringify({ csvContent, category, categoryId, baseImageUrl }),
+        });
+      }
+
+      // User management endpoints (admin only)
+      async getUsers() {
+        return this.request('/auth/users');
+      }
+
+      async createUser(userData: { username: string; password: string; role?: 'admin' | 'guest' }) {
+        return this.request('/auth/users', {
+          method: 'POST',
+          body: JSON.stringify(userData),
+        });
+      }
+
+      async deleteUser(userId: number) {
+        return this.request(`/auth/users/${userId}`, {
+          method: 'DELETE',
+        });
       }
     }
 

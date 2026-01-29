@@ -11,8 +11,12 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
 
   const tabs = [
     { id: 'evento', label: 'Evento' },
+    { id: 'nuestra-historia', label: 'Nuestra historia' },
     { id: 'regalos', label: 'Regalos' },
-    { id: 'reportes', label: 'Reportes' }
+    ...(user?.role === 'admin' ? [
+      { id: 'reportes', label: 'Reportes' },
+      { id: 'admin', label: 'Administración' }
+    ] : [])
   ];
 
   return (
@@ -38,9 +42,20 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
           </div>
 
           <div className="flex items-center space-x-4">
-            <span className="text-sm text-gray-700">
-              Bienvenido, {user?.username}
-            </span>
+            <div className="flex flex-col items-end">
+              <span className="text-sm text-gray-700">
+                Bienvenido, {user?.username}
+              </span>
+              {user && (
+                <span className={`text-xs px-2 py-0.5 rounded ${
+                  user.role === 'admin' 
+                    ? 'bg-purple-100 text-purple-700 font-medium' 
+                    : 'bg-gray-100 text-gray-600'
+                }`}>
+                  {user.role === 'admin' ? '👑 Admin' : '👤 Usuario'}
+                </span>
+              )}
+            </div>
             <button
               onClick={logout}
               className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-md text-sm font-medium"

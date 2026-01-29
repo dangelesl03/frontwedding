@@ -39,11 +39,19 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, onConfirm 
       number: '986506367',
       qr: getQRImage('plin')
     },
-    bankAccount: {
-      bank: 'BCP',
-      account: '191-12345678-0-00',
-      cci: '002-191-001234567890-00'
-    }
+    bankAccounts: [
+      {
+        bank: 'BCP',
+        account: '19379110084074',
+        cci: '00219317911008407416'
+      },
+      {
+        bank: 'Interbank',
+        account: '1223097161919',
+        cci: '00312201309716191997'
+      }
+    ],
+    accountHolder: 'Daniel Angeles Lujan'
   };
 
   const handleConfirm = async () => {
@@ -57,12 +65,11 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, onConfirm 
         return price * quantity;
       });
       
-      // Confirmar pago en el backend con los montos específicos
       await apiService.confirmPayment(
         giftIds,
-        'Transferencia', // Puedes cambiar esto según el método seleccionado
+        'Transferencia',
         `Pago confirmado - ${new Date().toISOString()}`,
-        amounts // Enviar los montos pagados
+        amounts
       );
       
       // Limpiar carrito después de confirmar
@@ -72,16 +79,12 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, onConfirm 
       
       showAlert('success', '¡Pago confirmado! Tu contribución ha sido registrada. Gracias por tu aporte.', 4000);
       
-      // Guardar la pestaña activa en localStorage antes de recargar
-      // para mantener la pestaña de regalos después del reload
       localStorage.setItem('activeTab', 'regalos');
       
-      // Recargar la página para actualizar el estado de los regalos después de un breve delay
       setTimeout(() => {
         window.location.reload();
       }, 2000);
     } catch (error: any) {
-      console.error('Error procesando pago:', error);
       const errorMessage = error?.response?.data?.message || error?.message || 'Error al procesar el pago. Por favor intenta nuevamente.';
       showAlert('error', errorMessage, 6000);
     } finally {
@@ -202,31 +205,56 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, onConfirm 
               </div>
             </div>
 
-            {/* Cuenta Bancaria */}
+            {/* Cuentas Bancarias */}
             <div className="border rounded-lg p-4">
               <h3 className="font-semibold text-lg mb-3">Transferencia Bancaria</h3>
-              <div className="space-y-2">
-                <div>
-                  <span className="text-sm text-gray-600">Banco:</span>
-                  <p className="font-semibold">{paymentInfo.bankAccount.bank}</p>
-                </div>
-                <div>
-                  <span className="text-sm text-gray-600">Cuenta:</span>
-                  <p className="font-mono font-semibold">{paymentInfo.bankAccount.account}</p>
-                </div>
-                <div>
-                  <span className="text-sm text-gray-600">CCI (Interbancario):</span>
-                  <p className="font-mono font-semibold">{paymentInfo.bankAccount.cci}</p>
-                  <button
-                    onClick={() => {
-                      navigator.clipboard.writeText(paymentInfo.bankAccount.cci);
-                      alert('CCI copiado al portapapeles');
-                    }}
-                    className="mt-1 text-sm text-pink-600 hover:text-pink-700"
-                  >
-                    📋 Copiar CCI
-                  </button>
-                </div>
+              <p className="text-sm text-gray-600 mb-4">
+                <span className="font-semibold">Titular:</span> {paymentInfo.accountHolder}
+              </p>
+              
+              <div className="space-y-6">
+                {paymentInfo.bankAccounts.map((bankAccount, index) => (
+                  <div key={index} className={`${index > 0 ? 'pt-4 border-t border-gray-200' : ''}`}>
+                    <div className="mb-3">
+                      <span className="text-sm text-gray-600">Banco:</span>
+                      <p className="font-semibold text-lg">{bankAccount.bank}</p>
+                    </div>
+                    <div className="mb-3">
+                      <span className="text-sm text-gray-600">
+                        {bankAccount.bank === 'BCP' ? 'Cuenta Soles:' : 'Cuenta Ahorro Sueldo Soles:'}
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <p className="font-mono font-semibold">{bankAccount.account}</p>
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(bankAccount.account);
+                            alert(`Número de cuenta ${bankAccount.bank} copiado al portapapeles`);
+                          }}
+                          className="text-sm text-pink-600 hover:text-pink-700"
+                        >
+                          📋 Copiar
+                        </button>
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-sm text-gray-600">
+                        {bankAccount.bank === 'BCP' ? 'CCI (Interbancario):' : 'CCI (Cuenta Interbancario):'}
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <p className="font-mono font-semibold">{bankAccount.cci}</p>
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(bankAccount.cci);
+                            alert(`CCI ${bankAccount.bank} copiado al portapapeles`);
+                          }}
+                          className="text-sm text-pink-600 hover:text-pink-700"
+                        >
+                          📋 Copiar
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

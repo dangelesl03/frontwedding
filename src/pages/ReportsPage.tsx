@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { apiService } from '../services/api';
 import { useAlert } from '../contexts/AlertContext';
+import { useAuth } from '../contexts/AuthContext';
 
 interface Contribution {
   userId: string;
@@ -20,12 +21,18 @@ interface GiftReport {
 
 const ReportsPage: React.FC = () => {
   const { showAlert } = useAlert();
+  const { user } = useAuth();
   const [gifts, setGifts] = useState<GiftReport[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [expandedGift, setExpandedGift] = useState<string | null>(null);
 
+  // Verificar si es admin
+  const isAdmin = user?.role === 'admin';
+
   const loadReports = useCallback(async () => {
+    if (!isAdmin) return; // No cargar si no es admin
+    
     try {
       setLoading(true);
       const data = await apiService.getContributionsReport();
@@ -38,11 +45,25 @@ const ReportsPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [showAlert]);
+  }, [showAlert, isAdmin]);
 
   useEffect(() => {
-    loadReports();
-  }, [loadReports]);
+    if (isAdmin) {
+      loadReports();
+    }
+  }, [loadReports, isAdmin]);
+
+  // Verificar acceso después de los hooks
+  if (!isAdmin) {
+    return (
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+          <h2 className="text-xl font-semibold text-red-800 mb-2">Acceso Denegado</h2>
+          <p className="text-red-600">Solo los administradores pueden acceder a los reportes.</p>
+        </div>
+      </div>
+    );
+  }
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);

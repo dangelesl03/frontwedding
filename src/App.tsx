@@ -5,8 +5,10 @@ import { AlertProvider } from './contexts/AlertContext';
 import Login from './components/Login';
 import Navigation from './components/Navigation';
 import EventPage from './pages/EventPage';
+import NuestraHistoriaPage from './pages/NuestraHistoriaPage';
 import GiftsPage from './pages/GiftsPage';
 import ReportsPage from './pages/ReportsPage';
+import AdminPage from './pages/AdminPage';
 import Cart from './components/Cart';
 
 const AppContent: React.FC = () => {
@@ -21,6 +23,26 @@ const AppContent: React.FC = () => {
   useEffect(() => {
     localStorage.setItem('activeTab', activeTab);
   }, [activeTab]);
+
+  // Escuchar eventos personalizados para cambiar de pestaña
+  useEffect(() => {
+    const handleTabChange = (event: CustomEvent) => {
+      setActiveTab(event.detail);
+    };
+    window.addEventListener('tabChange', handleTabChange as EventListener);
+    return () => {
+      window.removeEventListener('tabChange', handleTabChange as EventListener);
+    };
+  }, []);
+
+  // Verificar acceso a pestañas restringidas
+  const { user } = useAuth();
+  useEffect(() => {
+    // Si el usuario intenta acceder a reportes o admin sin ser admin, redirigir a evento
+    if ((activeTab === 'reportes' || activeTab === 'admin') && user?.role !== 'admin') {
+      setActiveTab('evento');
+    }
+  }, [activeTab, user]);
 
   if (loading) {
     return (
@@ -42,8 +64,10 @@ const AppContent: React.FC = () => {
 
             <main className="py-8">
               {activeTab === 'evento' && <EventPage />}
+              {activeTab === 'nuestra-historia' && <NuestraHistoriaPage />}
               {activeTab === 'regalos' && <GiftsPage />}
               {activeTab === 'reportes' && <ReportsPage />}
+              {activeTab === 'admin' && <AdminPage />}
             </main>
 
           <Cart />
