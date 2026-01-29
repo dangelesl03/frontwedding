@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { apiService } from '../services/api';
 import { useAlert } from '../contexts/AlertContext';
 import ConfirmDialog from './ConfirmDialog';
@@ -24,11 +24,7 @@ const ManageUsers: React.FC = () => {
     role: 'guest' as 'admin' | 'guest'
   });
 
-  useEffect(() => {
-    loadUsers();
-  }, []);
-
-  const loadUsers = async () => {
+  const loadUsers = useCallback(async () => {
     setLoading(true);
     try {
       const usersData = await apiService.getUsers();
@@ -38,7 +34,11 @@ const ManageUsers: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [showAlert]);
+
+  useEffect(() => {
+    loadUsers();
+  }, [loadUsers]);
 
   const handleCreateUser = async (e: React.FormEvent) => {
     e.preventDefault();
