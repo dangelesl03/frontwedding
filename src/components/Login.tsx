@@ -1,12 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
-const Login: React.FC = () => {
+interface LoginProps {
+  isAdminLogin?: boolean;
+}
+
+const Login: React.FC<LoginProps> = ({ isAdminLogin = false }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+  const { login, user } = useAuth();
+  const navigate = useNavigate();
+
+  // Redirigir si ya está autenticado como admin
+  useEffect(() => {
+    if (isAdminLogin && user?.role === 'admin') {
+      navigate('/admin');
+    }
+  }, [user, isAdminLogin, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -15,6 +28,12 @@ const Login: React.FC = () => {
 
     try {
       await login(username, password);
+      // Si es login de admin, esperar un momento para que el contexto se actualice
+      if (isAdminLogin) {
+        setTimeout(() => {
+          navigate('/admin');
+        }, 100);
+      }
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Error de autenticación');
     } finally {
@@ -27,14 +46,18 @@ const Login: React.FC = () => {
       <div className="max-w-md w-full space-y-8 p-8">
         <div className="text-center">
           <h2 className="text-3xl font-bold text-gray-900 mb-2">
-            ¡Bienvenidos!
+            {isAdminLogin ? 'Acceso de Administrador' : '¡Bienvenidos!'}
           </h2>
-          <p className="text-gray-600">
-            Natalia & Daniel
-          </p>
-          <p className="text-sm text-gray-500 mt-2">
-            28 de Marzo de 2026
-          </p>
+          {!isAdminLogin && (
+            <>
+              <p className="text-gray-600">
+                Natalia & Daniel
+              </p>
+              <p className="text-sm text-gray-500 mt-2">
+                28 de Marzo de 2026
+              </p>
+            </>
+          )}
         </div>
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -87,9 +110,11 @@ const Login: React.FC = () => {
           </button>
         </form>
 
-        <div className="text-center text-sm text-gray-500">
-          <p>Para acceder, contacta con los novios</p>
-        </div>
+        {!isAdminLogin && (
+          <div className="text-center text-sm text-gray-500">
+            <p>Para acceder, contacta con los novios</p>
+          </div>
+        )}
       </div>
     </div>
   );

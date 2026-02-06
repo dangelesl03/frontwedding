@@ -7,7 +7,7 @@ interface NavigationProps {
 }
 
 const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
-  const { logout, user } = useAuth();
+  const { logout, user, isAuthenticated } = useAuth();
 
   const tabs = [
     { id: 'evento', label: 'Evento' },
@@ -41,12 +41,12 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
             </div>
           </div>
 
-          <div className="flex items-center space-x-4">
-            <div className="flex flex-col items-end">
-              <span className="text-sm text-gray-700">
-                Bienvenido, {user?.username}
-              </span>
-              {user && (
+          {isAuthenticated && user && (
+            <div className="flex items-center space-x-4">
+              <div className="flex flex-col items-end">
+                <span className="text-sm text-gray-700">
+                  Bienvenido, {user.username}
+                </span>
                 <span className={`text-xs px-2 py-0.5 rounded ${
                   user.role === 'admin' 
                     ? 'bg-purple-100 text-purple-700 font-medium' 
@@ -54,15 +54,15 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
                 }`}>
                   {user.role === 'admin' ? '👑 Admin' : '👤 Usuario'}
                 </span>
-              )}
+              </div>
+              <button
+                onClick={logout}
+                className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-md text-sm font-medium"
+              >
+                Cerrar Sesión
+              </button>
             </div>
-            <button
-              onClick={logout}
-              className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-md text-sm font-medium"
-            >
-              Cerrar Sesión
-            </button>
-          </div>
+          )}
         </div>
       </div>
     </nav>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { CartProvider } from './contexts/CartContext';
 import { AlertProvider } from './contexts/AlertContext';
@@ -17,7 +18,7 @@ const AppContent: React.FC = () => {
     const savedTab = localStorage.getItem('activeTab');
     return savedTab || 'evento';
   });
-  const { isAuthenticated, loading } = useAuth();
+  const { loading } = useAuth();
   
   // Actualizar localStorage cuando cambia la pestaña activa
   useEffect(() => {
@@ -52,23 +53,19 @@ const AppContent: React.FC = () => {
     );
   }
 
-  if (!isAuthenticated) {
-    return <Login />;
-  }
-
   return (
     <AlertProvider>
       <CartProvider>
         <div className="min-h-screen bg-white">
           <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
 
-            <main className="py-8">
-              {activeTab === 'evento' && <EventPage />}
-              {activeTab === 'nuestra-historia' && <NuestraHistoriaPage />}
-              {activeTab === 'regalos' && <GiftsPage />}
-              {activeTab === 'reportes' && <ReportsPage />}
-              {activeTab === 'admin' && <AdminPage />}
-            </main>
+          <main className="py-8">
+            {activeTab === 'evento' && <EventPage />}
+            {activeTab === 'nuestra-historia' && <NuestraHistoriaPage />}
+            {activeTab === 'regalos' && <GiftsPage />}
+            {activeTab === 'reportes' && <ReportsPage />}
+            {activeTab === 'admin' && <AdminPage />}
+          </main>
 
           <Cart />
         </div>
@@ -77,10 +74,67 @@ const AppContent: React.FC = () => {
   );
 };
 
+// Componente para proteger rutas de admin
+const AdminRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { isAuthenticated, user, loading } = useAuth();
+  const location = useLocation();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500"></div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated || user?.role !== 'admin') {
+    return <Navigate to="/admin/login" state={{ from: location }} replace />;
+  }
+
+  return <>{children}</>;
+};
+
+// Componente para la página principal (invitados sin login)
+const MainApp: React.FC = () => {
+  return <AppContent />;
+};
+
+// Componente para la página de login de admin
+const AdminLoginPage: React.FC = () => {
+  const { isAuthenticated, user, loading } = useAuth();
+  const location = useLocation();
+  
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500"></div>
+      </div>
+    );
+  }
+  
+  // Si ya está autenticado como admin, redirigir a admin
+  if (isAuthenticated && user?.role === 'admin') {
+    const from = (location.state as any)?.from?.pathname || '/';
+    return <Navigate to={from} replace />;
+  }
+
+  return <Login isAdminLogin={true} />;
+};
+
 function App() {
   return (
     <AuthProvider>
-      <AppContent />
+      <Router>
+        <Routes>
+          <Route path="/admin/login" element={<AdminLoginPage />} />
+          <Route path="/admin" element={
+            <AdminRoute>
+              <MainApp />
+            </AdminRoute>
+          } />
+          <Route path="/*" element={<MainApp />} />
+        </Routes>
+      </Router>
     </AuthProvider>
   );
 }

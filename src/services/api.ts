@@ -137,11 +137,39 @@ class ApiService {
   }
 
       // Payment endpoints
-      async confirmPayment(giftIds: string[], paymentMethod?: string, paymentReference?: string, amounts?: number[]) {
-        return this.request('/payments/confirm', {
+      async confirmPayment(
+        giftIds: string[], 
+        paymentMethod?: string, 
+        paymentReference?: string, 
+        amounts?: number[],
+        receiptFile?: File
+      ) {
+        const formData = new FormData();
+        formData.append('giftIds', JSON.stringify(giftIds));
+        if (paymentMethod) formData.append('paymentMethod', paymentMethod);
+        if (paymentReference) formData.append('paymentReference', paymentReference);
+        if (amounts) formData.append('amounts', JSON.stringify(amounts));
+        if (receiptFile) formData.append('receipt', receiptFile);
+
+        const token = this.getToken();
+        const headers: Record<string, string> = {};
+        if (token) {
+          headers.Authorization = `Bearer ${token}`;
+        }
+
+        const url = `${API_BASE_URL}/payments/confirm`;
+        const response = await fetch(url, {
           method: 'POST',
-          body: JSON.stringify({ giftIds, paymentMethod, paymentReference, amounts }),
+          headers,
+          body: formData,
         });
+
+        if (!response.ok) {
+          const error = await response.json().catch(() => ({ message: 'Error desconocido' }));
+          throw new Error(error.message || `HTTP error! status: ${response.status}`);
+        }
+
+        return response.json();
       }
 
       // Category endpoints

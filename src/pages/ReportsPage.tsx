@@ -2,12 +2,15 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { apiService } from '../services/api';
 import { useAlert } from '../contexts/AlertContext';
 import { useAuth } from '../contexts/AuthContext';
+import { config } from '../config';
 
 interface Contribution {
   userId: string;
   username: string;
   amount: number;
   contributedAt: string;
+  receiptFile?: string | null;
+  note?: string | null;
 }
 
 interface GiftReport {
@@ -26,6 +29,7 @@ const ReportsPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [expandedGift, setExpandedGift] = useState<string | null>(null);
+  const [selectedReceipt, setSelectedReceipt] = useState<string | null>(null);
 
   // Verificar si es admin
   const isAdmin = user?.role === 'admin';
@@ -208,10 +212,13 @@ const ReportsPage: React.FC = () => {
                           <thead className="bg-gray-100">
                             <tr>
                               <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                                Usuario
+                                Nota
                               </th>
                               <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                                 Monto
+                              </th>
+                              <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                                Comprobante
                               </th>
                               <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                                 Fecha
@@ -219,36 +226,80 @@ const ReportsPage: React.FC = () => {
                             </tr>
                           </thead>
                           <tbody className="bg-white divide-y divide-gray-200">
-                            {gift.contributions.map((contribution, index) => (
-                              <tr key={index} className="hover:bg-gray-50">
-                                <td className="px-4 py-3 whitespace-nowrap">
-                                  <div className="flex items-center">
-                                    <div className="flex-shrink-0 h-8 w-8 bg-pink-100 rounded-full flex items-center justify-center">
-                                      <span className="text-pink-600 font-semibold text-sm">
-                                        {contribution.username.charAt(0).toUpperCase()}
-                                      </span>
+                            {gift.contributions.map((contribution, index) => {
+                              // Construir URL del comprobante
+                              let receiptUrl: string | null = null;
+                              if (contribution.receiptFile) {
+                                if (contribution.receiptFile.startsWith('http')) {
+                                  // URL absoluta
+                                  receiptUrl = contribution.receiptFile;
+                                } else {
+                                  // URL relativa - construir URL completa
+                                  // En desarrollo, usar localhost:5000, en producción usar la URL del backend
+                                  const isDevelopment = process.env.NODE_ENV === 'development';
+                                  const baseUrl = isDevelopment 
+                                    ? 'http://localhost:5000'
+                                    : config.API_URL.replace('/api', '');
+                                  receiptUrl = `${baseUrl}${contribution.receiptFile}`;
+                                }
+                              }
+                              
+                              return (
+                                <tr key={index} className="hover:bg-gray-50">
+                                  <td className="px-4 py-3">
+                                    <div className="text-sm text-gray-900">
+                                      {contribution.note || contribution.username || 'Sin nota'}
                                     </div>
-                                    <div className="ml-3">
-                                      <div className="text-sm font-medium text-gray-900">
-                                        {contribution.username}
+                                  </td>
+                                  <td className="px-4 py-3 whitespace-nowrap">
+                                    <span className="text-sm font-semibold text-gray-900">
+                                      S/ {contribution.amount.toFixed(2)}
+                                    </span>
+                                  </td>
+                                  <td className="px-4 py-3 whitespace-nowrap">
+                                    {receiptUrl ? (
+                                      <div className="flex items-center space-x-2">
+                                        <img
+                                          src={receiptUrl}
+                                          alt="Comprobante"
+                                          className="w-16 h-16 object-cover rounded border border-gray-200 cursor-pointer hover:opacity-75 transition-opacity shadow-sm"
+                                          onClick={() => receiptUrl && setSelectedReceipt(receiptUrl)}
+                                          onError={(e) => {
+                                            // Si la imagen falla, mostrar texto alternativo
+                                            const target = e.target as HTMLImageElement;
+                                            target.style.display = 'none';
+                                            const parent = target.parentElement;
+                                            if (parent && receiptUrl) {
+                                              const link = document.createElement('a');
+                                              link.href = receiptUrl;
+                                              link.target = '_blank';
+                                              link.className = 'text-pink-600 hover:text-pink-700 text-sm font-medium';
+                                              link.textContent = 'Ver comprobante';
+                                              parent.appendChild(link);
+                                            }
+                                          }}
+                                        />
+                                        <button
+                                          onClick={() => receiptUrl && setSelectedReceipt(receiptUrl)}
+                                          className="text-pink-600 hover:text-pink-700 text-xs font-medium"
+                                        >
+                                          Ver completo
+                                        </button>
                                       </div>
-                                    </div>
-                                  </div>
-                                </td>
-                                <td className="px-4 py-3 whitespace-nowrap">
-                                  <span className="text-sm font-semibold text-gray-900">
-                                    S/ {contribution.amount.toFixed(2)}
-                                  </span>
-                                </td>
-                                <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
-                                  {formatDate(contribution.contributedAt)}
-                                </td>
-                              </tr>
-                            ))}
+                                    ) : (
+                                      <span className="text-sm text-gray-400 italic">Sin comprobante</span>
+                                    )}
+                                  </td>
+                                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                                    {formatDate(contribution.contributedAt)}
+                                  </td>
+                                </tr>
+                              );
+                            })}
                           </tbody>
                           <tfoot className="bg-gray-100">
                             <tr>
-                              <td colSpan={3} className="px-4 py-3 text-right">
+                              <td colSpan={4} className="px-4 py-3 text-right">
                                 <span className="text-sm font-semibold text-gray-900">
                                   Total: S/ {gift.totalContributed.toFixed(2)}
                                 </span>
@@ -275,6 +326,61 @@ const ReportsPage: React.FC = () => {
       {error && (
         <div className="text-center py-12">
           <p className="text-red-500">{error}</p>
+        </div>
+      )}
+
+      {/* Modal para ver comprobante completo */}
+      {selectedReceipt && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4"
+          onClick={() => setSelectedReceipt(null)}
+        >
+          <div 
+            className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="sticky top-0 bg-white border-b p-4 flex justify-between items-center">
+              <h3 className="text-xl font-bold">Comprobante de Pago</h3>
+              <button
+                onClick={() => setSelectedReceipt(null)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="p-6">
+              <img
+                src={selectedReceipt}
+                alt="Comprobante completo"
+                className="w-full h-auto rounded-lg shadow-lg"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                  const parent = target.parentElement;
+                  if (parent) {
+                    const link = document.createElement('a');
+                    link.href = selectedReceipt;
+                    link.target = '_blank';
+                    link.className = 'text-pink-600 hover:text-pink-700 text-lg font-medium block text-center py-8';
+                    link.textContent = 'Ver comprobante en nueva ventana';
+                    parent.appendChild(link);
+                  }
+                }}
+              />
+              <div className="mt-4 text-center">
+                <a
+                  href={selectedReceipt}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-pink-600 hover:text-pink-700 text-sm font-medium"
+                >
+                  Abrir en nueva ventana
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>

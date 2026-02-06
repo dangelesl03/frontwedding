@@ -13,6 +13,9 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, onConfirm 
   const { items, totalPrice, clearCart } = useCart();
   const { showAlert } = useAlert();
   const [isProcessing, setIsProcessing] = useState(false);
+  const [receiptFile, setReceiptFile] = useState<File | undefined>(undefined);
+  const [note, setNote] = useState('');
+  const [errors, setErrors] = useState<{ receipt?: string; note?: string }>({});
 
   // Información de pago
   // Función helper para obtener la URL del QR (intenta varias rutas)
@@ -54,7 +57,43 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, onConfirm 
     accountHolder: 'Daniel Angeles Lujan'
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Validar tipo de archivo (imágenes y PDFs)
+      const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'application/pdf'];
+      if (!validTypes.includes(file.type)) {
+        setErrors({ ...errors, receipt: 'Por favor sube una imagen (JPG, PNG, GIF) o un PDF' });
+        return;
+      }
+      // Validar tamaño (máximo 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        setErrors({ ...errors, receipt: 'El archivo es demasiado grande. Máximo 5MB' });
+        return;
+      }
+      setReceiptFile(file);
+      setErrors({ ...errors, receipt: undefined });
+    }
+  };
+
   const handleConfirm = async () => {
+    // Validar campos obligatorios
+    const newErrors: { receipt?: string; note?: string } = {};
+    
+    if (!receiptFile) {
+      newErrors.receipt = 'Por favor sube el comprobante de pago';
+    }
+    
+    if (!note || note.trim() === '') {
+      newErrors.note = 'Por favor ingresa una nota con tu nombre';
+    }
+    
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      showAlert('error', 'Por favor completa todos los campos obligatorios', 4000);
+      return;
+    }
+
     setIsProcessing(true);
     try {
       // Obtener IDs de los regalos del carrito y los montos pagados
@@ -68,12 +107,16 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, onConfirm 
       await apiService.confirmPayment(
         giftIds,
         'Transferencia',
-        `Pago confirmado - ${new Date().toISOString()}`,
-        amounts
+        note.trim(),
+        amounts,
+        receiptFile // Ya validamos que no sea undefined arriba
       );
       
-      // Limpiar carrito después de confirmar
+      // Limpiar carrito y formulario después de confirmar
       clearCart();
+      setReceiptFile(undefined);
+      setNote('');
+      setErrors({});
       onConfirm();
       onClose();
       
@@ -92,6 +135,13 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, onConfirm 
     }
   };
 
+  const handleClose = () => {
+    setReceiptFile(undefined);
+    setNote('');
+    setErrors({});
+    onClose();
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -101,7 +151,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, onConfirm 
         <div className="sticky top-0 bg-white border-b p-4 flex justify-between items-center">
           <h2 className="text-2xl font-bold">Información de Pago</h2>
           <button
-            onClick={onClose}
+            onClick={handleClose}
             className="text-gray-500 hover:text-gray-700"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -256,6 +306,60 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, onConfirm 
                   </div>
                 ))}
               </div>
+            </div>
+          </div>
+
+          {/* Campos obligatorios: Comprobante y Nota */}
+          <div className="mt-6 pt-6 border-t space-y-4">
+            <div>
+              <label htmlFor="receipt" className="block text-sm font-medium text-gray-700 mb-2">
+                Comprobante de Pago <span className="text-red-500">*</span>
+              </label>
+              <input
+                id="receipt"
+                type="file"
+                accept="image/*,.pdf"
+                onChange={handleFileChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+              />
+              {errors.receipt && (
+                <p className="mt-1 text-sm text-red-600">{errors.receipt}</p>
+              )}
+              {receiptFile && (
+                <p className="mt-1 text-sm text-green-600">
+                  ✓ Archivo seleccionado: {receiptFile.name}
+                </p>
+              )}
+              <p className="mt-1 text-xs text-gray-500">
+                Formatos aceptados: JPG, PNG, GIF, PDF (máximo 5MB)
+              </p>
+            </div>
+
+            <div>
+              <label htmlFor="note" className="block text-sm font-medium text-gray-700 mb-2">
+                Nota <span className="text-red-500">*</span>
+              </label>
+              <textarea
+                id="note"
+                value={note}
+                onChange={(e) => {
+                  setNote(e.target.value);
+                  if (errors.note) {
+                    setErrors({ ...errors, note: undefined });
+                  }
+                }}
+                placeholder="Por favor ingresa tu nombre completo para identificar tu pago"
+                rows={3}
+                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 ${
+                  errors.note ? 'border-red-300' : 'border-gray-300'
+                }`}
+              />
+              {errors.note && (
+                <p className="mt-1 text-sm text-red-600">{errors.note}</p>
+              )}
+              <p className="mt-1 text-xs text-gray-500">
+                💡 Sugerencia: Incluye tu nombre completo para facilitar la identificación de tu pago
+              </p>
             </div>
           </div>
 
