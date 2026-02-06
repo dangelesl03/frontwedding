@@ -92,6 +92,12 @@ const GiftsPage: React.FC = () => {
         return;
       }
 
+      // Validar mínimo de 500 soles para contribuciones parciales
+      if (amount < 500) {
+        showAlert('warning', 'El monto mínimo para contribuir parcialmente es S/ 500.00');
+        return;
+      }
+
       // Validar que el monto no exceda el disponible
       const availableAmount = getAvailableAmount(gift);
       if (amount > availableAmount) {
@@ -341,14 +347,14 @@ const GiftsPage: React.FC = () => {
                       type="number"
                       value={contributionAmount}
                       onChange={(e) => setContributionAmount(e.target.value)}
-                      placeholder={`Monto a contribuir (máx. S/ ${getAvailableAmount(gift).toFixed(2)})`}
+                      placeholder={`Monto a contribuir (mín. S/ 500, máx. S/ ${getAvailableAmount(gift).toFixed(2)})`}
                       max={getAvailableAmount(gift)}
-                      min="0"
-                      step="0.01"
+                      min="500"
+                      step="100"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
                     />
                     <p className="text-xs text-gray-500 mt-1">
-                      Disponible: S/ {getAvailableAmount(gift).toFixed(2)} de S/ {getPrice(gift).toFixed(2)}
+                      Mínimo: S/ 500.00 | Disponible: S/ {getAvailableAmount(gift).toFixed(2)} de S/ {getPrice(gift).toFixed(2)}
                     </p>
                   </div>
                   <div className="flex space-x-2">
@@ -409,7 +415,7 @@ const GiftsPage: React.FC = () => {
                     </svg>
                     Agregar al Carrito
                   </button>
-                  {!isGiftFullyContributed(gift) && (
+                  {!isGiftFullyContributed(gift) && getPrice(gift) > 1000 && (
                     <button
                       onClick={() => setContributingTo(gift._id)}
                       className="w-full bg-gray-200 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-300 text-sm font-medium"
