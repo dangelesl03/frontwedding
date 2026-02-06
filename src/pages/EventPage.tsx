@@ -51,6 +51,9 @@ const DRESS_CODE_EXAMPLES = [
   '/images/dress-code/ejemplo-hombre-1.png' // Terno gris elegante
 ];
 
+// Fecha hardcoded de la boda: 28 de marzo de 2026
+const WEDDING_DATE = '2026-03-28';
+
 const EventPage: React.FC = () => {
   const [event, setEvent] = useState<EventData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -68,13 +71,18 @@ const EventPage: React.FC = () => {
 
   useEffect(() => {
     loadEvent();
+    // Calcular días restantes usando la fecha hardcoded
+    calculateDaysLeft();
   }, []);
 
   useEffect(() => {
-    if (event?.weddingDate) {
-      calculateDaysLeft(event.weddingDate);
-    }
-  }, [event]);
+    // Recalcular cada minuto para mantener el contador actualizado
+    const interval = setInterval(() => {
+      calculateDaysLeft();
+    }, 60000); // Cada minuto
+
+    return () => clearInterval(interval);
+  }, []);
 
   const loadEvent = async () => {
     try {
@@ -88,14 +96,22 @@ const EventPage: React.FC = () => {
     }
   };
 
-  const calculateDaysLeft = (weddingDate: string) => {
-    // Parsear la fecha manualmente para evitar problemas de zona horaria
-    const [year, month, day] = weddingDate.split('-').map(Number);
-    const wedding = new Date(year, month - 1, day); // month es 0-indexed en Date
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+  const calculateDaysLeft = () => {
+    // Fecha de la boda: 28 de marzo de 2026
+    const [year, month, day] = WEDDING_DATE.split('-').map(Number);
+    const wedding = new Date(year, month - 1, day, 0, 0, 0, 0);
+    
+    // Obtener la fecha actual en hora de Perú (UTC-5)
+    const now = new Date();
+    const peruOffset = -5 * 60; // UTC-5 en minutos
+    const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+    const peruTime = new Date(utc + (peruOffset * 60000));
+    
+    // Establecer hora a medianoche para comparar solo días
+    peruTime.setHours(0, 0, 0, 0);
     wedding.setHours(0, 0, 0, 0);
-    const diffTime = wedding.getTime() - today.getTime();
+    
+    const diffTime = wedding.getTime() - peruTime.getTime();
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
     setDaysLeft(Math.max(0, diffDays));
   };
@@ -114,10 +130,9 @@ const EventPage: React.FC = () => {
     }));
   };
 
-  const formatDate = (dateString: string) => {
-    // Parsear la fecha manualmente para evitar problemas de zona horaria
-    // La fecha viene en formato 'YYYY-MM-DD' desde la base de datos
-    const [year, month, day] = dateString.split('-').map(Number);
+  const formatDate = () => {
+    // Usar la fecha hardcoded: 28 de marzo de 2026
+    const [year, month, day] = WEDDING_DATE.split('-').map(Number);
     const date = new Date(year, month - 1, day); // month es 0-indexed en Date
     return date.toLocaleDateString('es-ES', {
       weekday: 'long',
@@ -215,7 +230,7 @@ const EventPage: React.FC = () => {
               <svg className="w-4 h-4 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4m-9 4h10m-9 4h10m-5-8v12" />
               </svg>
-              <span className="text-xs md:text-sm">{formatDate(event.weddingDate)}</span>
+              <span className="text-xs md:text-sm">{formatDate()}</span>
             </div>
             <div className="flex items-center text-sm">
               <svg className="w-4 h-4 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
