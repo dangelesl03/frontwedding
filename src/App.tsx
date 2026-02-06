@@ -13,11 +13,8 @@ import AdminPage from './pages/AdminPage';
 import Cart from './components/Cart';
 
 const AppContent: React.FC = () => {
-  // Restaurar la pestaña activa desde localStorage si existe, sino usar 'evento' por defecto
-  const [activeTab, setActiveTab] = useState(() => {
-    const savedTab = localStorage.getItem('activeTab');
-    return savedTab || 'evento';
-  });
+  // Siempre iniciar con 'evento' como página por defecto
+  const [activeTab, setActiveTab] = useState('evento');
   const { loading } = useAuth();
   
   // Actualizar localStorage cuando cambia la pestaña activa

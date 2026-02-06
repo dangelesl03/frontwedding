@@ -46,27 +46,75 @@ const NuestraHistoriaPage: React.FC = () => {
       </div>
 
       {/* Imagen central */}
-      <div className="mb-12">
+      <div className="mb-12 overflow-hidden rounded-lg shadow-md">
         <img 
-          src="/images/paris-proposal.jpg"
+          src="/images/default-wedding.webp"
           alt="Compromiso en París junto al río Sena y la Torre Eiffel"
-          className="w-full h-auto rounded-lg shadow-md object-cover"
-          style={{ maxHeight: '600px' }}
+          className="w-full rounded-lg"
+          style={{ 
+            maxHeight: '600px',
+            height: 'auto',
+            width: '100%',
+            display: 'block',
+            objectFit: 'cover',
+            objectPosition: 'center'
+          }}
         />
       </div>
 
-      {/* Sección: Nuestros hitos (sin título) */}
+      {/* Sección: Nuestros hitos */}
       <div className="mb-12 bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
         <div className="px-6 py-8">
-          {/* Timeline horizontal */}
-          <div className="relative py-8">
-            {/* Línea conectora - solo visible en desktop */}
-            <div className="absolute top-16 left-1/4 right-1/4 h-1 bg-purple-300 hidden md:block"></div>
+          {/* Título "Nuestros hitos" - bajado en mobile y desktop */}
+          <h2 
+            className="text-2xl md:text-3xl font-semibold text-gray-900 mb-6 text-center mt-8 md:mt-8"
+            style={{ fontFamily: '"Playfair Display", "Cormorant Garamond", "Georgia", serif' }}
+          >
+            Nuestros hitos
+          </h2>
+          
+          {/* Timeline vertical para mobile - visible solo hasta 768px */}
+          <div className="relative py-4 md:hidden">
+            {/* Línea conectora vertical */}
+            <div className="absolute left-8 top-12 bottom-12 w-0.5 bg-purple-300"></div>
 
-            {/* Milestones */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-4 relative">
+            {/* Milestones en formato vertical */}
+            <div className="space-y-8 relative">
               {milestones.map((milestone, index) => (
-                <div key={index} className="relative flex flex-col items-center">
+                <div key={`mobile-${index}`} className="relative flex items-start">
+                  {/* Círculo púrpura con número */}
+                  <div className="relative z-10 mr-6 flex-shrink-0">
+                    <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg border-2 border-purple-500">
+                      <span className="text-purple-600 font-bold text-xl">{index + 1}</span>
+                    </div>
+                  </div>
+
+                  {/* Contenido del milestone */}
+                  <div className="flex-1 pt-2">
+                    <div className="text-purple-600 font-semibold text-lg mb-1">
+                      {milestone.date}
+                    </div>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2" style={{ fontFamily: 'serif' }}>
+                      {milestone.title}
+                    </h3>
+                    <p className="text-gray-700 text-sm leading-relaxed">
+                      {milestone.description}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Timeline horizontal para desktop - visible solo desde 768px */}
+          <div className="relative py-8 hidden md:block">
+            {/* Línea conectora horizontal */}
+            <div className="absolute top-16 left-1/4 right-1/4 h-1 bg-purple-300"></div>
+
+            {/* Milestones en formato horizontal */}
+            <div className="grid grid-cols-3 gap-4 relative">
+              {milestones.map((milestone, index) => (
+                <div key={`desktop-${index}`} className="relative flex flex-col items-center">
                   {/* Círculo púrpura con número */}
                   <div className="relative z-10 mb-4">
                     <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg border-2 border-purple-500">
