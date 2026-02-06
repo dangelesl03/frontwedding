@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { apiService } from '../services/api';
 import { useAlert } from '../contexts/AlertContext';
 import { useAuth } from '../contexts/AuthContext';
-import { config } from '../config';
 
 interface Contribution {
   userId: string;
@@ -45,7 +44,7 @@ const ReportsPage: React.FC = () => {
     } catch (error: any) {
       setError('Error al cargar los reportes');
       showAlert('error', `Error al cargar los reportes: ${error.message || 'Error desconocido'}`);
-      console.error('Error loading reports:', error);
+      // Error ya manejado y mostrado al usuario
     } finally {
       setLoading(false);
     }

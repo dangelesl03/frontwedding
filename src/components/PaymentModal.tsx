@@ -14,6 +14,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, onConfirm 
   const { showAlert } = useAlert();
   const [isProcessing, setIsProcessing] = useState(false);
   const [receiptFile, setReceiptFile] = useState<File | undefined>(undefined);
+  const [receiptBase64, setReceiptBase64] = useState<string | undefined>(undefined);
   const [note, setNote] = useState('');
   const [errors, setErrors] = useState<{ receipt?: string; note?: string }>({});
 
@@ -171,13 +172,13 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, onConfirm 
       try {
         // Convertir a Base64 (se comprimirá automáticamente si es imagen)
         const base64 = await convertFileToBase64(file);
-        // Guardar el archivo original para mostrar preview, pero usaremos Base64 para enviar
+        // Guardar el archivo original para mostrar preview y el Base64 para enviar
         setReceiptFile(file);
-        // Guardar Base64 en un atributo personalizado del estado
-        (file as any).base64 = base64;
+        setReceiptBase64(base64);
         setErrors({ ...errors, receipt: undefined });
-      } catch (error: any) {
-        setErrors({ ...errors, receipt: error.message || 'Error al procesar el archivo' });
+      } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : 'Error al procesar el archivo';
+        setErrors({ ...errors, receipt: errorMessage });
       }
     }
   };
@@ -210,20 +211,21 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, onConfirm 
         return price * quantity;
       });
       
-      // Obtener Base64 del archivo
-      const receiptBase64 = (receiptFile as any)?.base64 || await convertFileToBase64(receiptFile!);
+      // Usar Base64 almacenado o convertir si no está disponible
+      const base64ToSend = receiptBase64 || await convertFileToBase64(receiptFile!);
       
       await apiService.confirmPayment(
         giftIds,
         'Transferencia',
         note.trim(),
         amounts,
-        receiptBase64 // Enviar Base64 en lugar del archivo
+        base64ToSend // Enviar Base64 en lugar del archivo
       );
       
       // Limpiar carrito y formulario después de confirmar
       clearCart();
       setReceiptFile(undefined);
+      setReceiptBase64(undefined);
       setNote('');
       setErrors({});
       onConfirm();
@@ -246,6 +248,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, onConfirm 
 
   const handleClose = () => {
     setReceiptFile(undefined);
+    setReceiptBase64(undefined);
     setNote('');
     setErrors({});
     onClose();
