@@ -89,7 +89,9 @@ const EventPage: React.FC = () => {
   };
 
   const calculateDaysLeft = (weddingDate: string) => {
-    const wedding = new Date(weddingDate);
+    // Parsear la fecha manualmente para evitar problemas de zona horaria
+    const [year, month, day] = weddingDate.split('-').map(Number);
+    const wedding = new Date(year, month - 1, day); // month es 0-indexed en Date
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     wedding.setHours(0, 0, 0, 0);
@@ -113,7 +115,11 @@ const EventPage: React.FC = () => {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('es-ES', {
+    // Parsear la fecha manualmente para evitar problemas de zona horaria
+    // La fecha viene en formato 'YYYY-MM-DD' desde la base de datos
+    const [year, month, day] = dateString.split('-').map(Number);
+    const date = new Date(year, month - 1, day); // month es 0-indexed en Date
+    return date.toLocaleDateString('es-ES', {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
