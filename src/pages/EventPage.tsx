@@ -323,7 +323,7 @@ const EventPage: React.FC = () => {
                   <div className="flex-1">
                     <h3 className="text-lg font-semibold text-gray-900 mb-1" style={{ fontFamily: 'serif' }}>Ceremonia Civil y Recepción</h3>
                     <div className="flex flex-wrap items-center gap-2 mb-2">
-                      <p className="text-xs text-gray-600">Casona Clark - Municipalidad de Miraflores</p>
+                      <p className="text-xs text-gray-600">Casona Clark</p>
                       <span className="text-gray-400">•</span>
                       <p className="text-xs text-gray-600">Música y baile</p>
                     </div>
