@@ -57,7 +57,103 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, onConfirm 
     accountHolder: 'Daniel Angeles Lujan'
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Función para comprimir imagen
+  const compressImage = (file: File, maxWidth: number = 1920, maxHeight: number = 1080, quality: number = 0.8): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      // Si es PDF, convertir directamente a Base64 sin comprimir
+      if (file.type === 'application/pdf') {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target?.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+
+          // Calcular nuevas dimensiones manteniendo la proporción
+          if (width > height) {
+            if (width > maxWidth) {
+              height = (height * maxWidth) / width;
+              width = maxWidth;
+            }
+          } else {
+            if (height > maxHeight) {
+              width = (width * maxHeight) / height;
+              height = maxHeight;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            reject(new Error('No se pudo obtener el contexto del canvas'));
+            return;
+          }
+
+          ctx.drawImage(img, 0, 0, width, height);
+          
+          // Convertir a Base64 con compresión
+          const compressedBase64 = canvas.toDataURL('image/jpeg', quality);
+          resolve(compressedBase64);
+        };
+        img.onerror = reject;
+        img.src = e.target?.result as string;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
+  // Función para convertir archivo a Base64
+  const convertFileToBase64 = async (file: File): Promise<string> => {
+    // Para PDFs, convertir directamente sin comprimir
+    if (file.type === 'application/pdf') {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target?.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // Para imágenes, comprimir
+    const maxBase64Size = 3 * 1024 * 1024; // 3MB
+    let quality = 0.8;
+    let maxWidth = 1920;
+    let maxHeight = 1080;
+    
+    while (quality > 0.3) {
+      const compressed = await compressImage(file, maxWidth, maxHeight, quality);
+      const base64Size = compressed.length;
+      
+      if (base64Size < maxBase64Size) {
+        return compressed;
+      }
+      
+      quality -= 0.1;
+      maxWidth = Math.floor(maxWidth * 0.9);
+      maxHeight = Math.floor(maxHeight * 0.9);
+    }
+    
+    const finalCompressed = await compressImage(file, 1200, 800, 0.4);
+    
+    if (finalCompressed.length > maxBase64Size) {
+      throw new Error(`La imagen es demasiado grande incluso después de comprimir. Por favor, usa una imagen más pequeña.`);
+    }
+    
+    return finalCompressed;
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       // Validar tipo de archivo (imágenes y PDFs)
@@ -71,8 +167,18 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, onConfirm 
         setErrors({ ...errors, receipt: 'El archivo es demasiado grande. Máximo 5MB' });
         return;
       }
-      setReceiptFile(file);
-      setErrors({ ...errors, receipt: undefined });
+      
+      try {
+        // Convertir a Base64 (se comprimirá automáticamente si es imagen)
+        const base64 = await convertFileToBase64(file);
+        // Guardar el archivo original para mostrar preview, pero usaremos Base64 para enviar
+        setReceiptFile(file);
+        // Guardar Base64 en un atributo personalizado del estado
+        (file as any).base64 = base64;
+        setErrors({ ...errors, receipt: undefined });
+      } catch (error: any) {
+        setErrors({ ...errors, receipt: error.message || 'Error al procesar el archivo' });
+      }
     }
   };
 
@@ -104,12 +210,15 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, onConfirm 
         return price * quantity;
       });
       
+      // Obtener Base64 del archivo
+      const receiptBase64 = (receiptFile as any)?.base64 || await convertFileToBase64(receiptFile!);
+      
       await apiService.confirmPayment(
         giftIds,
         'Transferencia',
         note.trim(),
         amounts,
-        receiptFile // Ya validamos que no sea undefined arriba
+        receiptBase64 // Enviar Base64 en lugar del archivo
       );
       
       // Limpiar carrito y formulario después de confirmar

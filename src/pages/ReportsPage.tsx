@@ -227,22 +227,8 @@ const ReportsPage: React.FC = () => {
                           </thead>
                           <tbody className="bg-white divide-y divide-gray-200">
                             {gift.contributions.map((contribution, index) => {
-                              // Construir URL del comprobante
-                              let receiptUrl: string | null = null;
-                              if (contribution.receiptFile) {
-                                if (contribution.receiptFile.startsWith('http')) {
-                                  // URL absoluta
-                                  receiptUrl = contribution.receiptFile;
-                                } else {
-                                  // URL relativa - construir URL completa
-                                  // En desarrollo, usar localhost:5000, en producción usar la URL del backend
-                                  const isDevelopment = process.env.NODE_ENV === 'development';
-                                  const baseUrl = isDevelopment 
-                                    ? 'http://localhost:5000'
-                                    : config.API_URL.replace('/api', '');
-                                  receiptUrl = `${baseUrl}${contribution.receiptFile}`;
-                                }
-                              }
+                              // El comprobante ahora es Base64 almacenado directamente en la BD
+                              const receiptBase64 = contribution.receiptFile;
                               
                               return (
                                 <tr key={index} className="hover:bg-gray-50">
@@ -257,30 +243,28 @@ const ReportsPage: React.FC = () => {
                                     </span>
                                   </td>
                                   <td className="px-4 py-3 whitespace-nowrap">
-                                    {receiptUrl ? (
+                                    {receiptBase64 ? (
                                       <div className="flex items-center space-x-2">
                                         <img
-                                          src={receiptUrl}
+                                          src={receiptBase64}
                                           alt="Comprobante"
                                           className="w-16 h-16 object-cover rounded border border-gray-200 cursor-pointer hover:opacity-75 transition-opacity shadow-sm"
-                                          onClick={() => receiptUrl && setSelectedReceipt(receiptUrl)}
+                                          onClick={() => setSelectedReceipt(receiptBase64)}
                                           onError={(e) => {
                                             // Si la imagen falla, mostrar texto alternativo
                                             const target = e.target as HTMLImageElement;
                                             target.style.display = 'none';
                                             const parent = target.parentElement;
-                                            if (parent && receiptUrl) {
-                                              const link = document.createElement('a');
-                                              link.href = receiptUrl;
-                                              link.target = '_blank';
-                                              link.className = 'text-pink-600 hover:text-pink-700 text-sm font-medium';
-                                              link.textContent = 'Ver comprobante';
-                                              parent.appendChild(link);
+                                            if (parent) {
+                                              const span = document.createElement('span');
+                                              span.className = 'text-sm text-gray-400 italic';
+                                              span.textContent = 'Error al cargar';
+                                              parent.appendChild(span);
                                             }
                                           }}
                                         />
                                         <button
-                                          onClick={() => receiptUrl && setSelectedReceipt(receiptUrl)}
+                                          onClick={() => setSelectedReceipt(receiptBase64)}
                                           className="text-pink-600 hover:text-pink-700 text-xs font-medium"
                                         >
                                           Ver completo
@@ -354,30 +338,32 @@ const ReportsPage: React.FC = () => {
               <img
                 src={selectedReceipt}
                 alt="Comprobante completo"
-                className="w-full h-auto rounded-lg shadow-lg"
+                className="w-full h-auto rounded-lg shadow-lg max-h-[70vh] object-contain mx-auto"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
                   target.style.display = 'none';
                   const parent = target.parentElement;
                   if (parent) {
-                    const link = document.createElement('a');
-                    link.href = selectedReceipt;
-                    link.target = '_blank';
-                    link.className = 'text-pink-600 hover:text-pink-700 text-lg font-medium block text-center py-8';
-                    link.textContent = 'Ver comprobante en nueva ventana';
-                    parent.appendChild(link);
+                    const span = document.createElement('span');
+                    span.className = 'text-red-500 text-center block py-8';
+                    span.textContent = 'Error al cargar el comprobante';
+                    parent.appendChild(span);
                   }
                 }}
               />
               <div className="mt-4 text-center">
-                <a
-                  href={selectedReceipt}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button
+                  onClick={() => {
+                    // Crear un enlace temporal para descargar
+                    const link = document.createElement('a');
+                    link.href = selectedReceipt;
+                    link.download = 'comprobante.png';
+                    link.click();
+                  }}
                   className="text-pink-600 hover:text-pink-700 text-sm font-medium"
                 >
-                  Abrir en nueva ventana
-                </a>
+                  Descargar comprobante
+                </button>
               </div>
             </div>
           </div>
