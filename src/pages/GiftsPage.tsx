@@ -35,8 +35,22 @@ const GiftsPage: React.FC = () => {
   const [sortBy, setSortBy] = useState('name');
   const [contributingTo, setContributingTo] = useState<string | null>(null);
   const [contributionAmount, setContributionAmount] = useState('');
+  const [categories, setCategories] = useState<string[]>(['Todas las categorías']);
 
-  const categories = ['Todas las categorías', 'Luna de Miel', 'Arte y Deco', 'Otro'];
+  // Cargar categorías desde la API
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const data = await apiService.getCategories();
+        setCategories(['Todas las categorías', ...data.map((cat: any) => cat.name)]);
+      } catch (error) {
+        console.error('Error loading categories:', error);
+        // Fallback a categorías por defecto si hay error
+        setCategories(['Todas las categorías', 'Luna de Miel', 'El gran día', 'Nuestro hogar', 'Otro']);
+      }
+    };
+    loadCategories();
+  }, []);
 
   const loadGifts = useCallback(async () => {
     try {
