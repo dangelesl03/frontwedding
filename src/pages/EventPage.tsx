@@ -176,18 +176,30 @@ const EventPage: React.FC = () => {
       {/* Card combinado: Banner + Información del evento */}
       <div className="mb-8 bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
         <div 
-          className="relative rounded-t-lg overflow-hidden"
+          className="relative rounded-t-lg overflow-hidden w-full"
           style={{
-            backgroundImage: 'url(/images/Imagen.webp)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-            minHeight: '200px',
+            aspectRatio: '18 / 9',
+            minHeight: '220px',
+            maxHeight: '400px',
+            width: '100%',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center'
           }}
         >
+          {/* Imagen de fondo con object-fit para mantener calidad - Posicionada a la izquierda */}
+          <img 
+            src="/images/event4.jpg"
+            alt="Natalia & Daniel"
+            className="absolute inset-0 w-full h-full"
+            style={{
+              objectFit: 'cover',
+              objectPosition: 'left center',
+              width: '100%',
+              height: '100%'
+            }}
+          />
+          
           {/* Overlay sutil para mejorar legibilidad */}
           <div 
             className="absolute inset-0"
@@ -199,7 +211,7 @@ const EventPage: React.FC = () => {
           
           {/* Texto sobre la imagen */}
           <h1 
-            className="relative z-10 text-4xl md:text-5xl px-4 py-6"
+            className="relative z-10 text-4xl md:text-5xl px-4 pt-28 pb-6 md:pt-16 md:pb-6"
             style={{ 
               fontFamily: '"Playfair Display", "Cormorant Garamond", "Georgia", serif',
               fontWeight: 500,
