@@ -46,20 +46,94 @@ const NuestraHistoriaPage: React.FC = () => {
       </div>
 
       {/* Imagen central */}
-      <div className="mb-12 overflow-hidden rounded-lg shadow-md">
-        <img 
-          src="/images/default-wedding.webp"
-          alt="Compromiso en París junto al río Sena y la Torre Eiffel"
-          className="w-full rounded-lg"
-          style={{ 
-            maxHeight: '600px',
-            height: 'auto',
-            width: '100%',
-            display: 'block',
-            objectFit: 'cover',
-            objectPosition: 'center'
-          }}
-        />
+      <div 
+        className="mb-12 rounded-xl shadow-lg relative flex items-center justify-center p-4 md:p-8 bg-gray-50 md:bg-transparent"
+        style={{
+          background: 'linear-gradient(135deg, #f5f3f0 0%, #e8e5e2 50%, #f5f3f0 100%)',
+          border: '1px solid rgba(0, 0, 0, 0.05)'
+        }}
+      >
+        {/* Texto decorativo "PARIS" - Izquierda */}
+        <div className="hidden md:block absolute left-4 top-1/2 transform -translate-y-1/2 -rotate-90 origin-center opacity-25">
+          <span className="text-xl font-serif text-[#8B7355] tracking-widest font-light">PARIS</span>
+        </div>
+
+        {/* Texto decorativo "PARIS" - Derecha */}
+        <div className="hidden md:block absolute right-4 top-1/2 transform -translate-y-1/2 rotate-90 origin-center opacity-25">
+          <span className="text-xl font-serif text-[#8B7355] tracking-widest font-light">PARIS</span>
+        </div>
+
+        {/* Texto decorativo "FRANCE" - Izquierda arriba */}
+        <div className="hidden md:block absolute left-6 top-1/4 transform -rotate-90 origin-left opacity-20">
+          <span className="text-base font-serif text-[#8B7355] tracking-wide">FRANCE</span>
+        </div>
+
+        {/* Texto decorativo "FRANCE" - Derecha arriba */}
+        <div className="hidden md:block absolute right-6 top-1/4 transform rotate-90 origin-right opacity-20">
+          <span className="text-base font-serif text-[#8B7355] tracking-wide">FRANCE</span>
+        </div>
+
+        {/* Bandera de Francia - Izquierda */}
+        <div className="hidden md:block absolute left-8 top-1/3 transform -translate-y-1/2 opacity-20">
+          <div className="flex flex-col" style={{ width: '20px', height: '40px' }}>
+            <div className="flex-1" style={{ backgroundColor: '#002654' }}></div>
+            <div className="flex-1" style={{ backgroundColor: '#FFFFFF' }}></div>
+            <div className="flex-1" style={{ backgroundColor: '#ED2939' }}></div>
+          </div>
+        </div>
+
+        {/* Bandera de Francia - Derecha */}
+        <div className="hidden md:block absolute right-8 top-1/3 transform -translate-y-1/2 opacity-20">
+          <div className="flex flex-col" style={{ width: '20px', height: '40px' }}>
+            <div className="flex-1" style={{ backgroundColor: '#002654' }}></div>
+            <div className="flex-1" style={{ backgroundColor: '#FFFFFF' }}></div>
+            <div className="flex-1" style={{ backgroundColor: '#ED2939' }}></div>
+          </div>
+        </div>
+
+        {/* Corazones decorativos sutiles */}
+        <div className="hidden md:block absolute left-10 top-1/4 opacity-15">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#d4a574">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+        </div>
+        <div className="hidden md:block absolute right-10 top-1/4 opacity-15">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#d4a574">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+        </div>
+        <div className="hidden md:block absolute left-10 bottom-1/4 opacity-15">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#d4a574">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+        </div>
+        <div className="hidden md:block absolute right-10 bottom-1/4 opacity-15">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#d4a574">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+        </div>
+
+        <div className="relative w-full rounded-lg overflow-hidden shadow-xl z-10">
+          <img 
+            src="/images/history.webp"
+            alt="Nuestra historia"
+            className="w-full rounded-lg object-cover md:object-contain md:max-h-[600px]"
+            style={{ 
+              maxHeight: '600px',
+              height: 'auto',
+              width: '100%',
+              display: 'block',
+              objectPosition: 'center'
+            }}
+          />
+          {/* Overlay sutil en los bordes */}
+          <div 
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              boxShadow: 'inset 0 0 40px rgba(0, 0, 0, 0.03)'
+            }}
+          />
+        </div>
       </div>
 
       {/* Sección: Nuestros hitos */}
