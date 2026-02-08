@@ -200,33 +200,31 @@ const EventPage: React.FC = () => {
             }}
           />
           
-          {/* Overlay sutil para mejorar legibilidad */}
-          <div 
-            className="absolute inset-0"
-            style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.3)',
-              backdropFilter: 'blur(0.5px)'
-            }}
-          />
-          
-          {/* Texto sobre la imagen */}
+        </div>
+        
+        {/* Texto "Natalia & Daniel" debajo de la foto */}
+        <div className="bg-white px-4 md:px-6 py-4 md:py-6 text-center border-b border-gray-200">
           <h1 
-            className="relative z-10 text-4xl md:text-5xl px-4 pt-28 pb-6 md:pt-16 md:pb-6"
+            className="text-3xl md:text-5xl"
             style={{ 
-              fontFamily: '"Playfair Display", "Cormorant Garamond", "Georgia", serif',
-              fontWeight: 500,
-              color: '#4A3728',
-              letterSpacing: '0.08em',
-              lineHeight: '1.3',
+              fontFamily: '"Cooper Lt BT", "Cooper", "Lora", "Georgia", serif',
               fontStyle: 'normal',
-              textShadow: '2px 2px 8px rgba(255, 255, 255, 0.8), 0px 0px 20px rgba(255, 255, 255, 0.6)'
+              fontWeight: 100,
+              fontSize: 'clamp(32px, 8vw, 57px)',
+              lineHeight: 'clamp(40px, 10vw, 68px)',
+              color: '#6B7E2E',
+              letterSpacing: '-0.01em',
+              WebkitFontSmoothing: 'antialiased',
+              MozOsxFontSmoothing: 'grayscale',
+              wordBreak: 'break-word',
+              overflowWrap: 'break-word'
             }}
           >
             {event.coupleNames.split('&').map((name, index, array) => (
               <React.Fragment key={index}>
-                <span style={{ fontWeight: 500 }}>{name.trim()}</span>
+                <span>{name.trim()}</span>
                 {index < array.length - 1 && (
-                  <span className="mx-3" style={{ fontFamily: '"Playfair Display", serif', fontWeight: 400, fontSize: '0.9em' }}>
+                  <span className="mx-3" style={{ fontFamily: '"Cooper Lt BT", "Cooper", "Lora", serif' }}>
                     &amp;
                   </span>
                 )}
@@ -539,15 +537,107 @@ const EventPage: React.FC = () => {
                 )}
               </div>
             </div>
-            {event.additionalInfo && (
-              <div className="mt-6">
-                <p className="text-gray-700 leading-relaxed whitespace-pre-line">
-                  {event.additionalInfo}
-                </p>
-              </div>
-            )}
           </div>
         )}
+      </div>
+
+      {/* Sección: Mensaje especial */}
+      {event.additionalInfo && (
+        <div className="mb-8 bg-white border-2 border-gray-300 rounded-lg overflow-hidden shadow-sm">
+          <div className="px-6 py-8 text-center">
+            <p className="text-gray-700 leading-relaxed text-lg whitespace-pre-line" style={{ fontFamily: 'serif' }}>
+              {event.additionalInfo}
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Sección: Galería de 3 imágenes */}
+      <div className="mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Imagen 1 */}
+          <div className="bg-white border-2 border-gray-300 rounded-lg overflow-hidden shadow-sm">
+            <div 
+              className="relative w-full"
+              style={{
+                aspectRatio: '3 / 4',
+                minHeight: '350px'
+              }}
+            >
+              <img 
+                src="/images/evento/izq2.jpg"
+                alt="Galería 1"
+                className="absolute inset-0 w-full h-full object-cover"
+                style={{
+                  objectPosition: 'center top'
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Imagen 2 */}
+          <div className="bg-white border-2 border-gray-300 rounded-lg overflow-hidden shadow-sm">
+            <div 
+              className="relative w-full"
+              style={{
+                aspectRatio: '3 / 4',
+                minHeight: '350px'
+              }}
+            >
+              <img 
+                src="/images/evento/mid2.jpg"
+                alt="Galería 2"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            </div>
+          </div>
+
+          {/* Imagen 3 */}
+          <div className="bg-white border-2 border-gray-300 rounded-lg overflow-hidden shadow-sm">
+            <div 
+              className="relative w-full"
+              style={{
+                aspectRatio: '3 / 4',
+                minHeight: '350px'
+              }}
+            >
+              <img 
+                src="/images/evento/der2.jpg"
+                alt="Galería 3"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Sección final: Imagen de cierre */}
+      <div className="mb-8 bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+        <div 
+          className="relative rounded-lg overflow-hidden w-full"
+          style={{
+            aspectRatio: '18 / 9',
+            minHeight: '220px',
+            maxHeight: '400px',
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          {/* Imagen de fondo con object-fit para mantener calidad - Posicionada a la izquierda */}
+          <img 
+            src="/images/evento/bottom2.jpg"
+            alt="Cierre"
+            className="absolute inset-0 w-full h-full"
+            style={{
+              objectFit: 'cover',
+              objectPosition: 'left center',
+              width: '100%',
+              height: '100%'
+            }}
+          />
+        </div>
       </div>
     </div>
   );

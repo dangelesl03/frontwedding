@@ -186,8 +186,8 @@ const AddGiftForm: React.FC<AddGiftFormProps> = ({ onSuccess }) => {
     }
 
     const price = parseFloat(formData.price);
-    if (!price || price < 500) {
-      showAlert('warning', 'El precio mínimo es S/ 500.00');
+    if (!price || price <= 0) {
+      showAlert('warning', 'El precio debe ser mayor a 0');
       return;
     }
 
@@ -323,7 +323,7 @@ const AddGiftForm: React.FC<AddGiftFormProps> = ({ onSuccess }) => {
         <div className="grid md:grid-cols-2 gap-4">
           <div>
             <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-2">
-                      Precio (S/) <span className="text-red-500">*</span> <span className="text-xs text-gray-500">(Mínimo: S/ 500)</span>
+                      Precio (S/) <span className="text-red-500">*</span>
             </label>
             <input
               type="number"
@@ -332,8 +332,8 @@ const AddGiftForm: React.FC<AddGiftFormProps> = ({ onSuccess }) => {
               value={formData.price}
               onChange={handleChange}
               required
-              min="500"
-              step="100"
+              min="0.01"
+              step="0.01"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
               placeholder="0.00"
             />

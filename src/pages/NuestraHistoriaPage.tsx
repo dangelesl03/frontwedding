@@ -4,24 +4,28 @@ interface Milestone {
   date: string;
   title: string;
   description: string;
+  image?: string;
 }
 
 const NuestraHistoriaPage: React.FC = () => {
   const milestones: Milestone[] = [
     {
-      date: 'Julio 2016',
+      date: '2016',
       title: 'El comienzo',
-      description: 'Una noche mientras cenábamos viendo el mar en Cala decidimos comenzar nuestra relación, por allá en julio del 2016.'
+      description: 'Una noche mientras cenábamos viendo el mar en Cala decidimos comenzar nuestra relación, por allá en julio del 2016.',
+      image: '/images/history.webp'
     },
     {
-      date: 'Septiembre 2023',
+      date: '2023',
       title: 'El compromiso',
-      description: 'Luego, en setiembre del 2023 mientras caminábamos por la orilla del rio Sena y a los pies de la torre Eiffel, Daniel se arrodilló, sacó un anillo y preguntó ¿Quieres viajar conmigo para toda la vida?'
+      description: 'Luego, en setiembre del 2023 mientras caminábamos por la orilla del rio Sena y a los pies de la torre Eiffel, Daniel se arrodilló, sacó un anillo y preguntó ¿Quieres viajar conmigo para toda la vida?',
+      image: '/images/history.webp'
     },
     {
       date: '2024',
       title: 'Nuestro hogar',
-      description: 'El año siguiente decidimos asumir un siguiente reto: comprar un departamento, el cual a base de mucho amor y esfuerzo lo hemos convertido en nuestro hogar'
+      description: 'El año siguiente decidimos asumir un siguiente reto: comprar un departamento, el cual a base de mucho amor y esfuerzo lo hemos convertido en nuestro hogar',
+      image: '/images/history.webp'
     }
   ];
   return (
@@ -150,30 +154,41 @@ const NuestraHistoriaPage: React.FC = () => {
           {/* Timeline vertical para mobile - visible solo hasta 768px */}
           <div className="relative py-4 md:hidden">
             {/* Línea conectora vertical */}
-            <div className="absolute left-8 top-12 bottom-12 w-0.5 bg-purple-300"></div>
+            <div className="absolute left-8 top-12 bottom-12 w-0.5" style={{ backgroundColor: '#9CAF88' }}></div>
 
             {/* Milestones en formato vertical */}
             <div className="space-y-8 relative">
               {milestones.map((milestone, index) => (
                 <div key={`mobile-${index}`} className="relative flex items-start">
-                  {/* Círculo púrpura con número */}
+                  {/* Círculo verde olivo con número */}
                   <div className="relative z-10 mr-6 flex-shrink-0">
-                    <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg border-2 border-purple-500">
-                      <span className="text-purple-600 font-bold text-xl">{index + 1}</span>
+                    <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg border-2" style={{ borderColor: '#6B7E2E' }}>
+                      <span className="font-bold text-xl" style={{ color: '#6B7E2E' }}>{index + 1}</span>
                     </div>
                   </div>
 
                   {/* Contenido del milestone */}
                   <div className="flex-1 pt-2">
-                    <div className="text-purple-600 font-semibold text-lg mb-1">
+                    <div className="font-semibold text-lg mb-1" style={{ color: '#6B7E2E' }}>
                       {milestone.date}
                     </div>
                     <h3 className="text-xl font-semibold text-gray-900 mb-2" style={{ fontFamily: 'serif' }}>
                       {milestone.title}
                     </h3>
-                    <p className="text-gray-700 text-sm leading-relaxed">
+                    <p className="text-gray-700 text-sm leading-relaxed mb-4">
                       {milestone.description}
                     </p>
+                    {/* Imagen del hito */}
+                    {milestone.image && (
+                      <div className="mt-4 rounded-lg overflow-hidden shadow-md w-full">
+                        <img 
+                          src={milestone.image}
+                          alt={milestone.title}
+                          className="w-full h-auto object-cover"
+                          style={{ maxHeight: '300px', minHeight: '250px', objectFit: 'cover' }}
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
@@ -183,30 +198,41 @@ const NuestraHistoriaPage: React.FC = () => {
           {/* Timeline horizontal para desktop - visible solo desde 768px */}
           <div className="relative py-8 hidden md:block">
             {/* Línea conectora horizontal */}
-            <div className="absolute top-16 left-1/4 right-1/4 h-1 bg-purple-300"></div>
+            <div className="absolute top-16 left-1/4 right-1/4 h-1" style={{ backgroundColor: '#9CAF88' }}></div>
 
             {/* Milestones en formato horizontal */}
-            <div className="grid grid-cols-3 gap-4 relative">
+            <div className="grid grid-cols-3 gap-4 relative items-stretch">
               {milestones.map((milestone, index) => (
                 <div key={`desktop-${index}`} className="relative flex flex-col items-center">
-                  {/* Círculo púrpura con número */}
+                  {/* Círculo verde olivo con número */}
                   <div className="relative z-10 mb-4">
-                    <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg border-2 border-purple-500">
-                      <span className="text-purple-600 font-bold text-xl">{index + 1}</span>
+                    <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg border-2" style={{ borderColor: '#6B7E2E' }}>
+                      <span className="font-bold text-xl" style={{ color: '#6B7E2E' }}>{index + 1}</span>
                     </div>
                   </div>
 
                   {/* Contenido del milestone */}
-                  <div className="text-center max-w-xs">
-                    <div className="text-purple-600 font-semibold text-lg mb-2">
+                  <div className="text-center max-w-xs flex flex-col h-full">
+                    <div className="font-semibold text-lg mb-2" style={{ color: '#6B7E2E' }}>
                       {milestone.date}
                     </div>
                     <h3 className="text-xl font-semibold text-gray-900 mb-2" style={{ fontFamily: 'serif' }}>
                       {milestone.title}
                     </h3>
-                    <p className="text-gray-700 text-sm leading-relaxed">
+                    <p className="text-gray-700 text-sm leading-relaxed mb-4">
                       {milestone.description}
                     </p>
+                    {/* Imagen del hito - alineada en la parte inferior */}
+                    {milestone.image && (
+                      <div className="mt-auto rounded-lg overflow-hidden shadow-md w-full">
+                        <img 
+                          src={milestone.image}
+                          alt={milestone.title}
+                          className="w-full object-cover"
+                          style={{ height: '250px', objectFit: 'cover' }}
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
