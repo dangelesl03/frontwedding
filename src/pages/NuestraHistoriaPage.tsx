@@ -13,19 +13,19 @@ const NuestraHistoriaPage: React.FC = () => {
       date: '2016',
       title: 'El comienzo',
       description: 'Una noche mientras cenábamos viendo el mar en Cala decidimos comenzar nuestra relación, por allá en julio del 2016.',
-      image: '/images/history.webp'
+      image: '/images/evento/izqhist2.jpg'
     },
     {
       date: '2023',
       title: 'El compromiso',
       description: 'Luego, en setiembre del 2023 mientras caminábamos por la orilla del rio Sena y a los pies de la torre Eiffel, Daniel se arrodilló, sacó un anillo y preguntó ¿Quieres viajar conmigo para toda la vida?',
-      image: '/images/history.webp'
+      image: '/images/evento/midhist2.jpg'
     },
     {
       date: '2024',
       title: 'Nuestro hogar',
       description: 'El año siguiente decidimos asumir un siguiente reto: comprar un departamento, el cual a base de mucho amor y esfuerzo lo hemos convertido en nuestro hogar',
-      image: '/images/history.webp'
+      image: '/images/evento/derhist2.jpg'
     }
   ];
   return (
@@ -175,20 +175,9 @@ const NuestraHistoriaPage: React.FC = () => {
                     <h3 className="text-xl font-semibold text-gray-900 mb-2" style={{ fontFamily: 'serif' }}>
                       {milestone.title}
                     </h3>
-                    <p className="text-gray-700 text-sm leading-relaxed mb-4">
+                    <p className="text-gray-700 text-sm leading-relaxed">
                       {milestone.description}
                     </p>
-                    {/* Imagen del hito */}
-                    {milestone.image && (
-                      <div className="mt-4 rounded-lg overflow-hidden shadow-md w-full">
-                        <img 
-                          src={milestone.image}
-                          alt={milestone.title}
-                          className="w-full h-auto object-cover"
-                          style={{ maxHeight: '300px', minHeight: '250px', objectFit: 'cover' }}
-                        />
-                      </div>
-                    )}
                   </div>
                 </div>
               ))}
@@ -219,24 +208,63 @@ const NuestraHistoriaPage: React.FC = () => {
                     <h3 className="text-xl font-semibold text-gray-900 mb-2" style={{ fontFamily: 'serif' }}>
                       {milestone.title}
                     </h3>
-                    <p className="text-gray-700 text-sm leading-relaxed mb-4">
+                    <p className="text-gray-700 text-sm leading-relaxed">
                       {milestone.description}
                     </p>
-                    {/* Imagen del hito - alineada en la parte inferior */}
-                    {milestone.image && (
-                      <div className="mt-auto rounded-lg overflow-hidden shadow-md w-full">
-                        <img 
-                          src={milestone.image}
-                          alt={milestone.title}
-                          className="w-full object-cover"
-                          style={{ height: '250px', objectFit: 'cover' }}
-                        />
-                      </div>
-                    )}
                   </div>
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Sección: Galería de imágenes de nuestros hitos */}
+      <div className="mb-12 bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+        <div className="px-6 py-8">
+          <h2 
+            className="text-2xl md:text-3xl font-semibold text-gray-900 mb-6 text-center"
+            style={{ fontFamily: '"Playfair Display", "Cormorant Garamond", "Georgia", serif' }}
+          >
+            Momentos especiales
+          </h2>
+          
+          {/* Galería móvil - vertical */}
+          <div className="md:hidden space-y-6">
+            {milestones.map((milestone, index) => (
+              milestone.image && (
+                <div key={`gallery-mobile-${index}`} className="rounded-lg overflow-hidden shadow-md" style={{ width: 'calc(100% + 6rem)', marginLeft: '-3rem', marginRight: '-3rem' }}>
+                  <img 
+                    src={milestone.image}
+                    alt={milestone.title}
+                    className="w-full h-auto object-cover"
+                    style={{ 
+                      maxHeight: '500px', 
+                      minHeight: '450px', 
+                      objectFit: 'cover',
+                      objectPosition: index === 0 ? 'left center' : 'center center',
+                      width: '100%'
+                    }}
+                  />
+                </div>
+              )
+            ))}
+          </div>
+
+          {/* Galería desktop - horizontal */}
+          <div className="hidden md:grid md:grid-cols-3 gap-4">
+            {milestones.map((milestone, index) => (
+              milestone.image && (
+                <div key={`gallery-desktop-${index}`} className="rounded-lg overflow-hidden shadow-md">
+                  <img 
+                    src={milestone.image}
+                    alt={milestone.title}
+                    className="w-full object-cover"
+                    style={{ height: '450px', objectFit: 'cover' }}
+                  />
+                </div>
+              )
+            ))}
           </div>
         </div>
       </div>
