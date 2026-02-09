@@ -118,6 +118,12 @@ const GiftsPage: React.FC = () => {
         return;
       }
 
+      // Validar que no sea Batidora (no permite contribución parcial)
+      if (gift.name.toLowerCase().includes('batidora')) {
+        showAlert('warning', 'Este regalo no permite contribución parcial');
+        return;
+      }
+
       // Validar mínimo de 500 soles para contribuciones parciales
       if (amount < 500) {
         showAlert('warning', 'El monto mínimo para contribuir parcialmente es S/ 500.00');
@@ -445,7 +451,7 @@ const GiftsPage: React.FC = () => {
                     </svg>
                     Agregar al Carrito
                   </button>
-                  {!isGiftFullyContributed(gift) && getPrice(gift) > 1000 && (
+                  {!isGiftFullyContributed(gift) && getPrice(gift) > 1000 && !gift.name.toLowerCase().includes('batidora') && (
                     <button
                       onClick={() => setContributingTo(gift._id)}
                       className="w-full bg-gray-200 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-300 text-sm font-medium"
