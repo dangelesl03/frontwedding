@@ -298,7 +298,7 @@ const AddGiftForm: React.FC<AddGiftFormProps> = ({ onSuccess }) => {
             value={formData.name}
             onChange={handleChange}
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-aqua-500"
             placeholder="Ej: Pasajes aéreos para luna de miel"
           />
         </div>
@@ -314,7 +314,7 @@ const AddGiftForm: React.FC<AddGiftFormProps> = ({ onSuccess }) => {
             value={formData.description}
             onChange={handleChange}
             rows={3}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-aqua-500"
             placeholder="Descripción detallada del regalo..."
           />
         </div>
@@ -334,7 +334,7 @@ const AddGiftForm: React.FC<AddGiftFormProps> = ({ onSuccess }) => {
               required
               min="0.01"
               step="0.01"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-aqua-500"
               placeholder="0.00"
             />
           </div>
@@ -348,7 +348,7 @@ const AddGiftForm: React.FC<AddGiftFormProps> = ({ onSuccess }) => {
               name="currency"
               value={formData.currency}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-aqua-500"
             >
               <option value="PEN">PEN (Soles)</option>
               <option value="USD">USD (Dólares)</option>
@@ -366,7 +366,7 @@ const AddGiftForm: React.FC<AddGiftFormProps> = ({ onSuccess }) => {
             name="category"
             value={formData.category}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-aqua-500"
           >
             {categories.map(cat => (
               <option key={cat} value={cat}>{cat}</option>
@@ -388,7 +388,7 @@ const AddGiftForm: React.FC<AddGiftFormProps> = ({ onSuccess }) => {
               onChange={handleChange}
               required
               min="0"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-aqua-500"
             />
           </div>
 
@@ -404,7 +404,7 @@ const AddGiftForm: React.FC<AddGiftFormProps> = ({ onSuccess }) => {
               onChange={handleChange}
               required
               min="1"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-aqua-500"
             />
           </div>
         </div>
@@ -457,7 +457,7 @@ const AddGiftForm: React.FC<AddGiftFormProps> = ({ onSuccess }) => {
                 name="imageUrl"
                 value={formData.imageUrl}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-aqua-500"
                 placeholder="https://ejemplo.com/imagen.jpg"
               />
               <p className="mt-1 text-xs text-gray-500">
@@ -472,7 +472,7 @@ const AddGiftForm: React.FC<AddGiftFormProps> = ({ onSuccess }) => {
                 accept="image/*"
                 multiple
                 onChange={handleFileChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-aqua-500"
               />
               <p className="mt-1 text-xs text-gray-500">
                 Formatos aceptados: JPG, PNG, GIF, WEBP. Tamaño máximo: 5MB por imagen. Puedes seleccionar múltiples imágenes.
@@ -546,7 +546,7 @@ const AddGiftForm: React.FC<AddGiftFormProps> = ({ onSuccess }) => {
           <button
             type="submit"
             disabled={loading}
-            className="px-6 py-2 bg-pink-600 text-white rounded-md hover:bg-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+            className="px-6 py-2 bg-aqua-600 text-white rounded-md hover:bg-aqua-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
           >
             {loading ? 'Creando...' : 'Crear Regalo'}
           </button>

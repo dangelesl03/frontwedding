@@ -369,7 +369,7 @@ const EditGiftForm: React.FC<EditGiftFormProps> = ({ gift, onSuccess, onCancel }
             value={formData.name}
             onChange={handleChange}
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-aqua-500"
           />
         </div>
 
@@ -384,7 +384,7 @@ const EditGiftForm: React.FC<EditGiftFormProps> = ({ gift, onSuccess, onCancel }
             value={formData.description}
             onChange={handleChange}
             rows={3}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-aqua-500"
           />
         </div>
 
@@ -403,7 +403,7 @@ const EditGiftForm: React.FC<EditGiftFormProps> = ({ gift, onSuccess, onCancel }
               required
               min="0"
               step="0.01"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-aqua-500"
             />
           </div>
 
@@ -416,7 +416,7 @@ const EditGiftForm: React.FC<EditGiftFormProps> = ({ gift, onSuccess, onCancel }
               name="currency"
               value={formData.currency}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-aqua-500"
             >
               <option value="PEN">PEN (Soles)</option>
               <option value="USD">USD (Dólares)</option>
@@ -434,7 +434,7 @@ const EditGiftForm: React.FC<EditGiftFormProps> = ({ gift, onSuccess, onCancel }
             name="category"
             value={formData.category}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-aqua-500"
           >
             {categories.map(cat => (
               <option key={cat} value={cat}>{cat}</option>
@@ -456,7 +456,7 @@ const EditGiftForm: React.FC<EditGiftFormProps> = ({ gift, onSuccess, onCancel }
               onChange={handleChange}
               required
               min="0"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-aqua-500"
             />
           </div>
 
@@ -472,7 +472,7 @@ const EditGiftForm: React.FC<EditGiftFormProps> = ({ gift, onSuccess, onCancel }
               onChange={handleChange}
               required
               min="1"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-aqua-500"
             />
           </div>
         </div>
@@ -548,7 +548,7 @@ const EditGiftForm: React.FC<EditGiftFormProps> = ({ gift, onSuccess, onCancel }
                 name="imageUrl"
                 value={formData.imageUrl}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-aqua-500"
                 placeholder="https://ejemplo.com/imagen.jpg"
               />
             </div>
@@ -560,7 +560,7 @@ const EditGiftForm: React.FC<EditGiftFormProps> = ({ gift, onSuccess, onCancel }
                 accept="image/*"
                 multiple
                 onChange={handleFileChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-aqua-500"
               />
               
               {imagePreviews.length > 0 && (
@@ -609,7 +609,7 @@ const EditGiftForm: React.FC<EditGiftFormProps> = ({ gift, onSuccess, onCancel }
           <button
             type="submit"
             disabled={loading}
-            className="px-6 py-2 bg-pink-600 text-white rounded-md hover:bg-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+            className="px-6 py-2 bg-aqua-600 text-white rounded-md hover:bg-aqua-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
           >
             {loading ? 'Guardando...' : 'Guardar Cambios'}
           </button>

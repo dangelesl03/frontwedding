@@ -55,7 +55,7 @@ const DressCodeSlider: React.FC<DressCodeSliderProps> = ({ images }) => {
           <>
             <button
               onClick={goToPrevious}
-              className="absolute left-1 top-1/2 -translate-y-1/2 bg-pink-200/90 hover:bg-pink-300 text-gray-800 rounded-full p-1 shadow-lg transition-all duration-200 z-10"
+              className="absolute left-1 top-1/2 -translate-y-1/2 bg-aqua-200/90 hover:bg-aqua-300 text-gray-800 rounded-full p-1 shadow-lg transition-all duration-200 z-10"
               aria-label="Imagen anterior"
             >
               <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -64,7 +64,7 @@ const DressCodeSlider: React.FC<DressCodeSliderProps> = ({ images }) => {
             </button>
             <button
               onClick={goToNext}
-              className="absolute right-1 top-1/2 -translate-y-1/2 bg-pink-200/90 hover:bg-pink-300 text-gray-800 rounded-full p-1 shadow-lg transition-all duration-200 z-10"
+              className="absolute right-1 top-1/2 -translate-y-1/2 bg-aqua-200/90 hover:bg-aqua-300 text-gray-800 rounded-full p-1 shadow-lg transition-all duration-200 z-10"
               aria-label="Siguiente imagen"
             >
               <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -83,8 +83,8 @@ const DressCodeSlider: React.FC<DressCodeSliderProps> = ({ images }) => {
                 onClick={() => goToSlide(index)}
                 className={`h-1.5 rounded-full transition-all duration-300 ${
                   index === currentIndex
-                    ? 'w-4 bg-pink-500'
-                    : 'w-1.5 bg-pink-300 hover:bg-pink-400'
+                    ? 'w-4 bg-aqua-500'
+                    : 'w-1.5 bg-aqua-300 hover:bg-aqua-400'
                 }`}
                 aria-label={`Ir a slide ${index + 1}`}
               />

@@ -90,7 +90,7 @@ const AdminPage: React.FC = () => {
             onClick={() => setActiveSection('add-gift')}
             className={`py-4 px-1 border-b-2 font-medium text-sm ${
               activeSection === 'add-gift'
-                ? 'border-pink-500 text-pink-600'
+                ? 'border-aqua-500 text-aqua-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
@@ -100,7 +100,7 @@ const AdminPage: React.FC = () => {
             onClick={() => setActiveSection('manage-gifts')}
             className={`py-4 px-1 border-b-2 font-medium text-sm ${
               activeSection === 'manage-gifts'
-                ? 'border-pink-500 text-pink-600'
+                ? 'border-aqua-500 text-aqua-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
@@ -110,7 +110,7 @@ const AdminPage: React.FC = () => {
             onClick={() => setActiveSection('gift-cards')}
             className={`py-4 px-1 border-b-2 font-medium text-sm ${
               activeSection === 'gift-cards'
-                ? 'border-pink-500 text-pink-600'
+                ? 'border-aqua-500 text-aqua-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
@@ -120,7 +120,7 @@ const AdminPage: React.FC = () => {
             onClick={() => setActiveSection('categories')}
             className={`py-4 px-1 border-b-2 font-medium text-sm ${
               activeSection === 'categories'
-                ? 'border-pink-500 text-pink-600'
+                ? 'border-aqua-500 text-aqua-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
@@ -130,7 +130,7 @@ const AdminPage: React.FC = () => {
             onClick={() => setActiveSection('users')}
             className={`py-4 px-1 border-b-2 font-medium text-sm ${
               activeSection === 'users'
-                ? 'border-pink-500 text-pink-600'
+                ? 'border-aqua-500 text-aqua-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
@@ -140,7 +140,7 @@ const AdminPage: React.FC = () => {
             onClick={() => setActiveSection('import')}
             className={`py-4 px-1 border-b-2 font-medium text-sm ${
               activeSection === 'import'
-                ? 'border-pink-500 text-pink-600'
+                ? 'border-aqua-500 text-aqua-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >

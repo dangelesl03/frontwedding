@@ -145,7 +145,7 @@ const EventPage: React.FC = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64 bg-white">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-aqua-500"></div>
       </div>
     );
   }
@@ -295,11 +295,11 @@ const EventPage: React.FC = () => {
             {/* Mapas con información lado a lado */}
             <div className="grid md:grid-cols-2 gap-4">
               {/* Ceremonia Religiosa - Izquierda */}
-              <div className="bg-gradient-to-br from-pink-50 to-white border border-gray-200 rounded-lg p-4 flex flex-col shadow-sm">
+              <div className="bg-gradient-to-br from-aqua-50 to-white border border-gray-200 rounded-lg p-4 flex flex-col shadow-sm">
                 {/* Header con icono grande - Estilo similar al banner */}
                 <div className="mb-4 flex items-start space-x-3">
                   <div className="bg-white rounded-full p-3 flex-shrink-0 shadow-md">
-                    <svg className="w-6 h-6 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-6 h-6 text-aqua-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                     </svg>
                   </div>
@@ -314,13 +314,13 @@ const EventPage: React.FC = () => {
                 <div className="mb-4 pb-4 border-b border-gray-200">
                   <div className="flex items-center space-x-4 text-sm">
                     <div className="flex items-center">
-                      <svg className="w-4 h-4 text-pink-600 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 text-aqua-600 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4m-9 4h10m-9 4h10m-5-8v12" />
                       </svg>
                       <span className="text-gray-700 font-medium">{CEREMONY_LOCATION.date}</span>
                     </div>
                     <div className="flex items-center">
-                      <svg className="w-4 h-4 text-pink-600 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 text-aqua-600 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                       <span className="text-gray-700 font-medium">{CEREMONY_LOCATION.time}</span>

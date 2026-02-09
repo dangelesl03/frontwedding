@@ -119,7 +119,7 @@ const ManageUsers: React.FC = () => {
         <h2 className="text-2xl font-semibold text-gray-900">Gestión de Usuarios</h2>
         <button
           onClick={() => setShowCreateForm(!showCreateForm)}
-          className="bg-pink-600 text-white px-4 py-2 rounded-md hover:bg-pink-700 transition-colors"
+          className="bg-aqua-600 text-white px-4 py-2 rounded-md hover:bg-aqua-700 transition-colors"
         >
           {showCreateForm ? 'Cancelar' : '+ Crear Usuario'}
         </button>
@@ -138,7 +138,7 @@ const ManageUsers: React.FC = () => {
                 type="text"
                 value={formData.username}
                 onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-aqua-500"
                 required
               />
             </div>
@@ -150,7 +150,7 @@ const ManageUsers: React.FC = () => {
                 type="password"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-aqua-500"
                 required
                 minLength={3}
               />
@@ -163,7 +163,7 @@ const ManageUsers: React.FC = () => {
                 type="password"
                 value={formData.confirmPassword}
                 onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-aqua-500"
                 required
                 minLength={3}
               />
@@ -175,7 +175,7 @@ const ManageUsers: React.FC = () => {
               <select
                 value={formData.role}
                 onChange={(e) => setFormData({ ...formData, role: e.target.value as 'admin' | 'guest' })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-aqua-500"
               >
                 <option value="guest">Usuario (Guest)</option>
                 <option value="admin">Administrador</option>
@@ -185,7 +185,7 @@ const ManageUsers: React.FC = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="bg-pink-600 text-white px-4 py-2 rounded-md hover:bg-pink-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-aqua-600 text-white px-4 py-2 rounded-md hover:bg-aqua-700 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? 'Creando...' : 'Crear Usuario'}
               </button>
@@ -212,7 +212,7 @@ const ManageUsers: React.FC = () => {
       {/* Lista de usuarios */}
       {loading && !showCreateForm ? (
         <div className="text-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-500 mx-auto"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-aqua-500 mx-auto"></div>
         </div>
       ) : (
         <div className="overflow-x-auto">

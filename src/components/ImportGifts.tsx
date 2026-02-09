@@ -172,7 +172,7 @@ const ImportGifts: React.FC<ImportGiftsProps> = ({ onSuccess }) => {
           onClick={() => setImportMethod('csv')}
           className={`px-4 py-2 rounded-md font-medium transition-colors ${
             importMethod === 'csv'
-              ? 'bg-pink-600 text-white'
+              ? 'bg-aqua-600 text-white'
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
           }`}
         >
@@ -183,7 +183,7 @@ const ImportGifts: React.FC<ImportGiftsProps> = ({ onSuccess }) => {
           onClick={() => setImportMethod('url')}
           className={`px-4 py-2 rounded-md font-medium transition-colors ${
             importMethod === 'url'
-              ? 'bg-pink-600 text-white'
+              ? 'bg-aqua-600 text-white'
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
           }`}
         >
@@ -228,7 +228,7 @@ const ImportGifts: React.FC<ImportGiftsProps> = ({ onSuccess }) => {
                 id="csv-file"
                 accept=".csv,text/csv"
                 onChange={handleFileChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-aqua-500"
                 disabled={loading}
               />
               {csvFile && (
@@ -248,7 +248,7 @@ const ImportGifts: React.FC<ImportGiftsProps> = ({ onSuccess }) => {
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 placeholder="Ej: El Gran día"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-aqua-500"
                 disabled={loading}
               />
             </div>
@@ -257,7 +257,7 @@ const ImportGifts: React.FC<ImportGiftsProps> = ({ onSuccess }) => {
               type="button"
               onClick={handleCSVImport}
               disabled={loading || !csvFile}
-              className="w-full px-6 py-3 bg-pink-600 text-white rounded-md hover:bg-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+              className="w-full px-6 py-3 bg-aqua-600 text-white rounded-md hover:bg-aqua-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
             >
               {loading ? 'Importando...' : 'Importar desde CSV'}
             </button>
@@ -282,7 +282,7 @@ const ImportGifts: React.FC<ImportGiftsProps> = ({ onSuccess }) => {
             onChange={(e) => setUrl(e.target.value)}
             placeholder="https://ejemplo.com/regalos"
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-aqua-500"
             disabled={loading}
           />
           <p className="mt-1 text-xs text-gray-500">
@@ -300,7 +300,7 @@ const ImportGifts: React.FC<ImportGiftsProps> = ({ onSuccess }) => {
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             placeholder="Ej: Luna de Miel"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-aqua-500"
             disabled={loading}
           />
           <p className="mt-1 text-xs text-gray-500">
@@ -311,7 +311,7 @@ const ImportGifts: React.FC<ImportGiftsProps> = ({ onSuccess }) => {
             <button
               type="submit"
               disabled={loading || !url.trim()}
-              className="w-full px-6 py-3 bg-pink-600 text-white rounded-md hover:bg-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+              className="w-full px-6 py-3 bg-aqua-600 text-white rounded-md hover:bg-aqua-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
             >
               {loading ? 'Importando...' : 'Importar Regalos'}
             </button>

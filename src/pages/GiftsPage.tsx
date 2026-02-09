@@ -200,7 +200,7 @@ const GiftsPage: React.FC = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-aqua-500"></div>
       </div>
     );
   }
@@ -228,7 +228,7 @@ const GiftsPage: React.FC = () => {
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-aqua-500"
             >
               {categories.map((category) => (
                 <option key={category} value={category}>
@@ -248,7 +248,7 @@ const GiftsPage: React.FC = () => {
               value={minPrice}
               onChange={(e) => setMinPrice(e.target.value)}
               placeholder="Min"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-aqua-500"
             />
           </div>
 
@@ -261,7 +261,7 @@ const GiftsPage: React.FC = () => {
               value={maxPrice}
               onChange={(e) => setMaxPrice(e.target.value)}
               placeholder="Max"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-aqua-500"
             />
           </div>
 
@@ -273,7 +273,7 @@ const GiftsPage: React.FC = () => {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-aqua-500"
             >
               <option value="name">Nombre</option>
               <option value="price_asc">Precio: Menor a Mayor</option>
@@ -330,7 +330,7 @@ const GiftsPage: React.FC = () => {
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2">
                   <div
-                    className="bg-pink-500 h-2 rounded-full"
+                    className="bg-aqua-500 h-2 rounded-full"
                     style={{ width: `${getProgressPercentage(gift)}%` }}
                   ></div>
                 </div>
@@ -365,7 +365,7 @@ const GiftsPage: React.FC = () => {
                       max={getAvailableAmount(gift)}
                       min="500"
                       step="100"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-aqua-500"
                     />
                     <p className="text-xs text-gray-500 mt-1">
                       Mínimo: S/ 500.00 | Disponible: S/ {getAvailableAmount(gift).toFixed(2)} de S/ {getPrice(gift).toFixed(2)}
@@ -374,7 +374,7 @@ const GiftsPage: React.FC = () => {
                   <div className="flex space-x-2">
                     <button
                       onClick={() => handleContribute(gift._id)}
-                      className="flex-1 bg-pink-600 text-white py-2 px-4 rounded-md hover:bg-pink-700 text-sm font-medium"
+                      className="flex-1 bg-aqua-600 text-white py-2 px-4 rounded-md hover:bg-aqua-700 text-sm font-medium"
                     >
                       Contribuir
                     </button>
@@ -422,7 +422,7 @@ const GiftsPage: React.FC = () => {
                       }
                     }}
                     disabled={isGiftFullyContributed(gift)}
-                    className="w-full bg-pink-600 text-white py-2 px-4 rounded-md hover:bg-pink-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium flex items-center justify-center"
+                    className="w-full bg-aqua-600 text-white py-2 px-4 rounded-md hover:bg-aqua-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium flex items-center justify-center"
                   >
                     <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />

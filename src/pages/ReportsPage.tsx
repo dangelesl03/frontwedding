@@ -91,7 +91,7 @@ const ReportsPage: React.FC = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-aqua-500"></div>
       </div>
     );
   }
@@ -112,9 +112,9 @@ const ReportsPage: React.FC = () => {
       <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
         <h2 className="text-xl font-semibold mb-4">Resumen General</h2>
         <div className="grid md:grid-cols-3 gap-4">
-          <div className="bg-pink-50 p-4 rounded-lg">
+          <div className="bg-aqua-50 p-4 rounded-lg">
             <p className="text-sm text-gray-600">Total de Regalos</p>
-            <p className="text-2xl font-bold text-pink-600">{gifts.length}</p>
+            <p className="text-2xl font-bold text-aqua-600">{gifts.length}</p>
           </div>
           <div className="bg-green-50 p-4 rounded-lg">
             <p className="text-sm text-gray-600">Regalos Completados</p>
@@ -158,7 +158,7 @@ const ReportsPage: React.FC = () => {
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div
-                        className="bg-pink-500 h-2 rounded-full transition-all"
+                        className="bg-aqua-500 h-2 rounded-full transition-all"
                         style={{ width: `${getProgressPercentage(gift)}%` }}
                       ></div>
                     </div>
@@ -264,7 +264,7 @@ const ReportsPage: React.FC = () => {
                                         />
                                         <button
                                           onClick={() => setSelectedReceipt(receiptBase64)}
-                                          className="text-pink-600 hover:text-pink-700 text-xs font-medium"
+                                          className="text-aqua-600 hover:text-aqua-700 text-xs font-medium"
                                         >
                                           Ver completo
                                         </button>
@@ -359,7 +359,7 @@ const ReportsPage: React.FC = () => {
                     link.download = 'comprobante.png';
                     link.click();
                   }}
-                  className="text-pink-600 hover:text-pink-700 text-sm font-medium"
+                  className="text-aqua-600 hover:text-aqua-700 text-sm font-medium"
                 >
                   Descargar comprobante
                 </button>

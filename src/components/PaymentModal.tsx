@@ -322,7 +322,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, onConfirm 
                       navigator.clipboard.writeText(paymentInfo.yape.number);
                       alert('Número de Yape copiado al portapapeles');
                     }}
-                    className="mt-2 text-sm text-pink-600 hover:text-pink-700"
+                    className="mt-2 text-sm text-aqua-600 hover:text-aqua-700"
                   >
                     📋 Copiar número
                   </button>
@@ -359,7 +359,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, onConfirm 
                       navigator.clipboard.writeText(paymentInfo.plin.number);
                       alert('Número de Plin copiado al portapapeles');
                     }}
-                    className="mt-2 text-sm text-pink-600 hover:text-pink-700"
+                    className="mt-2 text-sm text-aqua-600 hover:text-aqua-700"
                   >
                     📋 Copiar número
                   </button>
@@ -392,7 +392,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, onConfirm 
                             navigator.clipboard.writeText(bankAccount.account);
                             alert(`Número de cuenta ${bankAccount.bank} copiado al portapapeles`);
                           }}
-                          className="text-sm text-pink-600 hover:text-pink-700"
+                          className="text-sm text-aqua-600 hover:text-aqua-700"
                         >
                           📋 Copiar
                         </button>
@@ -409,7 +409,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, onConfirm 
                             navigator.clipboard.writeText(bankAccount.cci);
                             alert(`CCI ${bankAccount.bank} copiado al portapapeles`);
                           }}
-                          className="text-sm text-pink-600 hover:text-pink-700"
+                          className="text-sm text-aqua-600 hover:text-aqua-700"
                         >
                           📋 Copiar
                         </button>
@@ -432,7 +432,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, onConfirm 
                 type="file"
                 accept="image/*,.pdf"
                 onChange={handleFileChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-aqua-500 focus:border-aqua-500"
               />
               {errors.receipt && (
                 <p className="mt-1 text-sm text-red-600">{errors.receipt}</p>
@@ -462,7 +462,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, onConfirm 
                 }}
                 placeholder="Por favor ingresa tu nombre completo para identificar tu pago"
                 rows={3}
-                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 ${
+                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-aqua-500 focus:border-aqua-500 ${
                   errors.note ? 'border-red-300' : 'border-gray-300'
                 }`}
               />
@@ -480,7 +480,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, onConfirm 
             <button
               onClick={handleConfirm}
               disabled={isProcessing}
-              className="w-full bg-pink-600 text-white py-3 px-6 rounded-md hover:bg-pink-700 disabled:opacity-50 disabled:cursor-not-allowed text-lg font-semibold"
+              className="w-full bg-aqua-600 text-white py-3 px-6 rounded-md hover:bg-aqua-700 disabled:opacity-50 disabled:cursor-not-allowed text-lg font-semibold"
             >
               {isProcessing ? 'Procesando...' : '✓ Confirmar Pago'}
             </button>

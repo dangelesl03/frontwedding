@@ -131,7 +131,7 @@ const ManageCategories: React.FC = () => {
   if (loading && categories.length === 0) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-aqua-500"></div>
       </div>
     );
   }
@@ -143,7 +143,7 @@ const ManageCategories: React.FC = () => {
         {!showAddForm && (
           <button
             onClick={() => setShowAddForm(true)}
-            className="px-4 py-2 bg-pink-600 text-white rounded-md hover:bg-pink-700 transition-colors font-medium"
+            className="px-4 py-2 bg-aqua-600 text-white rounded-md hover:bg-aqua-700 transition-colors font-medium"
           >
             + Agregar Categoría
           </button>
@@ -168,7 +168,7 @@ const ManageCategories: React.FC = () => {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-aqua-500"
                 placeholder="Ej: Electrónica"
               />
             </div>
@@ -183,7 +183,7 @@ const ManageCategories: React.FC = () => {
                 value={formData.description}
                 onChange={handleChange}
                 rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-aqua-500"
                 placeholder="Descripción opcional de la categoría"
               />
             </div>
@@ -205,7 +205,7 @@ const ManageCategories: React.FC = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="px-6 py-2 bg-pink-600 text-white rounded-md hover:bg-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+                className="px-6 py-2 bg-aqua-600 text-white rounded-md hover:bg-aqua-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
               >
                 {loading ? 'Guardando...' : editingCategory ? 'Actualizar' : 'Crear'}
               </button>
