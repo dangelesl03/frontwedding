@@ -46,8 +46,8 @@ const RECEPTION_LOCATION = {
 // Imágenes de ejemplo para Dress Code (combinadas: mujeres y hombres)
 // Usando las imágenes proporcionadas por el usuario
 const DRESS_CODE_EXAMPLES = [
-  '/images/dress-code/ejemplo-mujer-1.png', // Vestido largo rosa/magenta elegante
-  '/images/dress-code/ejemplo-mujer-2.png', // Vestido largo azul real elegante
+  '/images/dress-code/vestido1.webp', // Vestido largo elegante
+  '/images/dress-code/vestido2.webp', // Vestido largo elegante
   '/images/dress-code/ejemplo-hombre-1.png' // Terno gris elegante
 ];
 
