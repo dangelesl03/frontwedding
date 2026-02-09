@@ -36,6 +36,7 @@ const GiftsPage: React.FC = () => {
   const [contributingTo, setContributingTo] = useState<string | null>(null);
   const [contributionAmount, setContributionAmount] = useState('');
   const [categories, setCategories] = useState<string[]>(['Todas las categorías']);
+  const [selectedImage, setSelectedImage] = useState<{ url: string; name: string } | null>(null);
 
   // Cargar categorías desde la API
   useEffect(() => {
@@ -51,6 +52,17 @@ const GiftsPage: React.FC = () => {
     };
     loadCategories();
   }, []);
+
+  // Cerrar modal con ESC
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && selectedImage) {
+        setSelectedImage(null);
+      }
+    };
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [selectedImage]);
 
   const loadGifts = useCallback(async () => {
     try {
@@ -293,7 +305,11 @@ const GiftsPage: React.FC = () => {
                 <img
                   src={gift.imageUrl || (gift as any).image_url}
                   alt={gift.name}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover cursor-pointer hover:opacity-90 transition-opacity"
+                  onClick={() => setSelectedImage({ 
+                    url: gift.imageUrl || (gift as any).image_url, 
+                    name: gift.name 
+                  })}
                   onError={(e) => {
                     // Si la imagen falla al cargar, ocultar y mostrar placeholder
                     const target = e.target as HTMLImageElement;
@@ -453,6 +469,42 @@ const GiftsPage: React.FC = () => {
       {error && (
         <div className="text-center py-12">
           <p className="text-red-500">{error}</p>
+        </div>
+      )}
+
+      {/* Modal para imagen ampliada */}
+      {selectedImage && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
+          onClick={() => setSelectedImage(null)}
+        >
+          <div 
+            className="relative max-w-4xl max-h-[90vh] w-full"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Botón cerrar */}
+            <button
+              onClick={() => setSelectedImage(null)}
+              className="absolute top-4 right-4 bg-white/90 hover:bg-white text-gray-800 rounded-full p-2 shadow-lg transition-all duration-200 z-10"
+              aria-label="Cerrar"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            {/* Imagen ampliada */}
+            <img
+              src={selectedImage.url}
+              alt={selectedImage.name}
+              className="w-full h-auto max-h-[90vh] object-contain rounded-lg"
+            />
+
+            {/* Nombre del regalo */}
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 text-white px-4 py-2 rounded-lg">
+              <p className="text-sm font-medium">{selectedImage.name}</p>
+            </div>
+          </div>
         </div>
       )}
     </div>
