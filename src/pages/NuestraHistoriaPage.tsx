@@ -223,11 +223,15 @@ const NuestraHistoriaPage: React.FC = () => {
       <div className="mb-12 bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
         <div className="px-6 py-8">
           <h2 
-            className="text-2xl md:text-3xl font-semibold text-gray-900 mb-6 text-center"
+            className="text-2xl md:text-3xl font-semibold text-gray-900 mb-4 text-center"
             style={{ fontFamily: '"Playfair Display", "Cormorant Garamond", "Georgia", serif' }}
           >
             Momentos especiales
           </h2>
+          
+          <p className="text-gray-700 text-center text-lg mb-6 leading-relaxed max-w-3xl mx-auto" style={{ fontFamily: 'serif' }}>
+            Después de recorrer juntos 21 países y más de 65 ciudades, hoy emprendemos el viaje más importante de todos: aquel que se camina sin mapas, pero con el corazón
+          </p>
           
           {/* Galería móvil - vertical */}
           <div className="md:hidden space-y-6">
