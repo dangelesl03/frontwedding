@@ -18,7 +18,7 @@ const NuestraHistoriaPage: React.FC = () => {
     {
       date: '2023',
       title: 'El compromiso',
-      description: 'Luego, en setiembre del 2023 mientras caminábamos por la orilla del rio Sena y a los pies de la torre Eiffel, Daniel se arrodilló, sacó un anillo y preguntó ¿Quieres viajar conmigo para toda la vida?',
+      description: 'Luego, en setiembre del 2023 mientras caminábamos por la orilla del rio Sena y a los pies de la torre Eiffel, Daniel se arrodilló, sacó un anillo y preguntó ¿Quieres ser mi compañera en este viaje llamado vida?',
       image: '/images/evento/midhist2.jpg'
     },
     {
